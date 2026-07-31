@@ -34,6 +34,7 @@ a { color: var(--accent); }
 .site-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.7rem;
   padding-bottom: 1.2rem;
   margin-bottom: 1.6rem;
@@ -71,6 +72,54 @@ a { color: var(--accent); }
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-soft);
+}
+
+/* ----- Widget de transposición (inyectado por song-sheet.js en el header) ----- */
+
+.site-header .transpose {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--sans);
+}
+.site-header .transpose button {
+  appearance: none;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 0;
+}
+.site-header .transpose .t-down,
+.site-header .transpose .t-up {
+  width: 1.6rem;
+  height: 1.6rem;
+  line-height: 1;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.site-header .transpose .t-current {
+  width: 2.1rem;
+  border: none;
+  text-align: center;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  border-radius: 4px;
+}
+.site-header .transpose button:hover,
+.site-header .transpose button:focus-visible {
+  color: var(--accent);
+  outline: none;
+}
+.site-header .transpose .t-down:hover,
+.site-header .transpose .t-up:hover,
+.site-header .transpose .t-down:focus-visible,
+.site-header .transpose .t-up:focus-visible {
+  border-color: currentColor;
 }
 
 @media print { .site-header { display: none; } }

@@ -71,7 +71,7 @@ relativos a `../assets/`. Lo que cambia por canción:
 <title>{Título} · Letras</title>
 ...
 <h1>{Título}</h1>
-<p class="lead">{Artista} · Tonalidad: {tonalidad}{, Capo N si aplica}</p>
+<p class="lead">{Artista}{, Capo N si aplica}</p>
 
 <song-sheet>
 <div class="letra">

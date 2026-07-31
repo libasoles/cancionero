@@ -111,6 +111,51 @@
     '}',
   ].join('\n');
 
+  // ----- Transposición de acordes -----
+  // Notas con sostenidos y con bemoles; se elige una de las dos grafías según
+  // lo que ya use la canción (si el cifrado original trae bemoles, se
+  // transpone en bemoles; si no, en sostenidos), para no cambiarle el "acento"
+  // a una tonalidad que el usuario ya reconoce (ej. Bb en vez de A#).
+  var SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  var FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+  var NOTE_INDEX = {
+    C: 0, 'B#': 0,
+    'C#': 1, Db: 1,
+    D: 2,
+    'D#': 3, Eb: 3,
+    E: 4, Fb: 4,
+    F: 5, 'E#': 5,
+    'F#': 6, Gb: 6,
+    G: 7,
+    'G#': 8, Ab: 8,
+    A: 9,
+    'A#': 10, Bb: 10,
+    B: 11, Cb: 11
+  };
+  var ROOT_RE = /^([A-G])([#b]?)/;
+
+  // Transpone la raíz de un fragmento de acorde (ej. "Am7" -> raíz "A" +
+  // sufijo "m7"); deja el sufijo intacto porque no afecta la nota.
+  function transposePart(part, semitones, useFlats) {
+    var m = ROOT_RE.exec(part);
+    if (!m) return part;
+    var root = m[1] + m[2];
+    var idx = NOTE_INDEX[root];
+    if (idx === undefined) return part;
+    var suffix = part.slice(m[0].length);
+    var newIdx = ((idx + semitones) % 12 + 12) % 12;
+    var names = useFlats ? FLAT_NAMES : SHARP_NAMES;
+    return names[newIdx] + suffix;
+  }
+
+  // Un acorde puede traer bajo ("G/B"): se transponen ambos lados por
+  // separado porque cada uno es una nota independiente.
+  function transposeChord(text, semitones, useFlats) {
+    return text.split('/').map(function (part) {
+      return transposePart(part, semitones, useFlats);
+    }).join('/');
+  }
+
   class SongSheet extends HTMLElement {}
 
   SongSheet.prototype.connectedCallback = function () {
@@ -132,6 +177,62 @@
     while (this.firstChild) {
       root.appendChild(this.firstChild);
     }
+
+    this._mountTranspose(root);
+  };
+
+  // Widget de transposición: vive en el header de la página (no en el shadow
+  // root), al lado del logo, para no ocupar espacio propio arriba de la
+  // letra. Sube o baja medio tono todos los .c del shadow root. Guardamos el
+  // nombre original de cada acorde en un dataset para recalcular siempre
+  // desde la fuente y evitar que redondeos se acumulen entre clics. El
+  // indicador central tiene ancho fijo y siempre es un número (nunca aparece
+  // ni desaparece texto), para que no haya layout shift al usarlo.
+  SongSheet.prototype._mountTranspose = function (root) {
+    var chords = root.querySelectorAll('.c');
+    var header = document.querySelector('.site-header');
+    if (!chords.length || !header || header.querySelector('.transpose')) return;
+
+    var useFlats = false;
+    var hasSharp = false;
+    for (var i = 0; i < chords.length; i++) {
+      var text = chords[i].textContent;
+      chords[i].dataset.original = text;
+      if (text.indexOf('b') !== -1 && ROOT_RE.test(text)) useFlats = true;
+      if (text.indexOf('#') !== -1) hasSharp = true;
+    }
+    if (hasSharp) useFlats = false;
+
+    var widget = document.createElement('div');
+    widget.className = 'transpose';
+    widget.innerHTML =
+      '<button type="button" class="t-down" aria-label="Bajar medio tono">−</button>' +
+      '<button type="button" class="t-current" aria-label="Restablecer tono original" title="Restablecer tono original">0</button>' +
+      '<button type="button" class="t-up" aria-label="Subir medio tono">+</button>';
+    header.appendChild(widget);
+
+    var current = widget.querySelector('.t-current');
+    var semitones = 0;
+
+    function render() {
+      for (var i = 0; i < chords.length; i++) {
+        chords[i].textContent = transposeChord(chords[i].dataset.original, semitones, useFlats);
+      }
+      current.textContent = semitones === 0 ? '0' : (semitones > 0 ? '+' + semitones : String(semitones));
+    }
+
+    widget.querySelector('.t-down').addEventListener('click', function () {
+      semitones -= 1;
+      render();
+    });
+    widget.querySelector('.t-up').addEventListener('click', function () {
+      semitones += 1;
+      render();
+    });
+    current.addEventListener('click', function () {
+      semitones = 0;
+      render();
+    });
   };
 
   // Registro. Idempotente por si el script se carga dos veces.
