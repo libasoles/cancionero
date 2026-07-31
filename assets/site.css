@@ -10,11 +10,14 @@
   --accent: #8b0000;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --sans:
+    -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --max-width: 760px;
 }
 
-html { background: var(--paper); }
+html {
+  background: var(--paper);
+}
 
 body {
   font-family: var(--serif);
@@ -58,16 +61,28 @@ a {
   text-decoration: none;
   color: var(--ink);
 }
-.site-header a.brand:hover { color: var(--accent); }
+.site-header a.brand:hover {
+  color: var(--accent);
+}
 .site-header .logo {
   width: 40px;
   height: 40px;
   flex: none;
   display: block;
 }
-.site-header .logo .frame { fill: none; stroke: currentColor; stroke-width: 4; }
-.site-header .logo .string { stroke: currentColor; stroke-width: 2; opacity: 0.5; }
-.site-header .logo .dot { fill: var(--accent); }
+.site-header .logo .frame {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+}
+.site-header .logo .string {
+  stroke: currentColor;
+  stroke-width: 2;
+  opacity: 0.5;
+}
+.site-header .logo .dot {
+  fill: var(--accent);
+}
 .site-header .wordmark {
   font-family: var(--sans);
   font-weight: 600;
@@ -125,7 +140,9 @@ a {
   text-overflow: ellipsis;
   color: var(--accent);
 }
-.site-header .transpose .t-current.is-transposed { color: var(--accent-strong, var(--accent)); }
+.site-header .transpose .t-current.is-transposed {
+  color: var(--accent-strong, var(--accent));
+}
 .site-header .transpose button:hover,
 .site-header .transpose button:focus-visible {
   color: var(--accent);
@@ -138,11 +155,29 @@ a {
   border-color: currentColor;
 }
 
-@media print { .site-header { display: none; } }
+@media print {
+  .site-header {
+    display: none;
+  }
+}
 
-h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; }
-h1 { font-size: 2.2rem; margin: 0 0 0.08rem; line-height: 1.05; }
-h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.3rem; }
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+h1 {
+  font-size: 2.2rem;
+  margin: 0 0 0.08rem;
+  line-height: 1.05;
+}
+h2 {
+  font-size: 1.4rem;
+  margin: 2.5rem 0 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.3rem;
+}
 
 .song-titlebar {
   position: relative;
@@ -180,6 +215,7 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transform-origin: center;
 }
 
 .chord-toggle svg {
@@ -220,7 +256,12 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
   justify-content: center;
   border-radius: 999px;
   -webkit-tap-highlight-color: transparent;
-  transition: color 160ms ease, opacity 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  transform-origin: center;
+  transition:
+    color 160ms ease,
+    opacity 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .teleprompter-toggle svg {
@@ -244,7 +285,9 @@ body.teleprompter-active .site-header {
   border-bottom-color: transparent;
   position: relative;
   z-index: 2;
-  transition: opacity 180ms ease, visibility 0s linear 180ms;
+  transition:
+    opacity 180ms ease,
+    visibility 0s linear 180ms;
 }
 
 body.teleprompter-active .song-titlebar,
@@ -259,7 +302,9 @@ body.teleprompter-active .song-controls .chord-toggle {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 180ms ease, visibility 0s linear 180ms;
+  transition:
+    opacity 180ms ease,
+    visibility 0s linear 180ms;
 }
 
 body.teleprompter-active .song-controls {
@@ -277,7 +322,11 @@ body.teleprompter-active .song-controls .teleprompter-toggle {
   background: color-mix(in srgb, var(--paper) 84%, transparent);
   backdrop-filter: blur(6px);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  animation: teleprompter-float-in 260ms cubic-bezier(.22, .84, .31, 1.12);
+}
+
+.chord-toggle.is-pulsing,
+.teleprompter-toggle.is-pulsing {
+  animation: toggle-pulse 340ms cubic-bezier(0.22, 0.84, 0.31, 1.12);
 }
 
 body.teleprompter-active .song-scroll-region {
@@ -300,19 +349,23 @@ body.teleprompter-active .song-scroll-region::-webkit-scrollbar-thumb {
 
 body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--ink-soft) 45%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--ink-soft) 45%, transparent)
+    transparent;
 }
 
-body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::-webkit-scrollbar {
+body.teleprompter-active.teleprompter-manual-scroll
+  .song-scroll-region::-webkit-scrollbar {
   width: 0.6rem;
   height: 0.6rem;
 }
 
-body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::-webkit-scrollbar-track {
+body.teleprompter-active.teleprompter-manual-scroll
+  .song-scroll-region::-webkit-scrollbar-track {
   background: transparent;
 }
 
-body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::-webkit-scrollbar-thumb {
+body.teleprompter-active.teleprompter-manual-scroll
+  .song-scroll-region::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--ink-soft) 45%, transparent);
   border-radius: 999px;
 }
@@ -333,7 +386,8 @@ body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::-webkit
     padding-right: 0;
   }
 
-  body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::after {
+  body.teleprompter-active.teleprompter-manual-scroll
+    .song-scroll-region::after {
     opacity: 0;
   }
 }
@@ -342,29 +396,38 @@ body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::-webkit
 .song-titlebar h1,
 .lead,
 .song-controls .chord-toggle {
-  transition: opacity 180ms ease, visibility 0s linear 0s;
+  transition:
+    opacity 180ms ease,
+    visibility 0s linear 0s;
 }
 
 .site-header {
-  transition: opacity 180ms ease, visibility 0s linear 0s;
+  transition:
+    opacity 180ms ease,
+    visibility 0s linear 0s;
 }
 
-@keyframes teleprompter-float-in {
+@keyframes toggle-pulse {
   from {
     opacity: 0;
-    transform: translateY(-4px) scale(0.94);
+    transform: scale(0.88);
   }
   65% {
     opacity: 1;
-    transform: translateY(1px) scale(1.03);
+    transform: scale(1.12);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1);
   }
 }
 
-.lead { color: var(--ink-soft); font-size: 1.05rem; margin: 0 0 0.65rem; line-height: 1.15; }
+.lead {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  margin: 0 0 0.65rem;
+  line-height: 1.15;
+}
 
 .song-scroll-region {
   overflow-y: auto;
@@ -405,19 +468,36 @@ body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::-webkit
   border-bottom-color: currentColor;
 }
 
-@media print { .source-link { display: none; } }
+@media print {
+  .source-link {
+    display: none;
+  }
+}
 
 /* ----- Índice de canciones ----- */
 
-.toc { list-style: none; padding: 0; margin: 1.5rem 0; }
+.toc {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
 .toc li {
   border-bottom: 1px solid var(--rule);
   padding: 1rem 0;
   display: block;
 }
-.toc .title { font-size: 1.2rem; font-weight: 600; }
-.toc .title a { border-bottom: none; }
-.toc .desc { color: var(--ink-soft); font-size: 0.95rem; margin: 0.2rem 0 0; }
+.toc .title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.toc .title a {
+  border-bottom: none;
+}
+.toc .desc {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  margin: 0.2rem 0 0;
+}
 
 /* ----- Modal de diagrama de acorde (assets/chord-modal.js) ----- */
 
@@ -431,7 +511,9 @@ body.teleprompter-active.teleprompter-manual-scroll .song-scroll-region::-webkit
   padding: 1.5rem;
   z-index: 100;
 }
-.chord-modal-overlay.is-open { display: flex; }
+.chord-modal-overlay.is-open {
+  display: flex;
+}
 
 .chord-modal {
   position: relative;

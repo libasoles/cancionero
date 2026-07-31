@@ -400,6 +400,12 @@
     var timerId = 0;
     var speed = 0.45;
 
+    function pulseButton(button) {
+      button.classList.remove('is-pulsing');
+      void button.offsetWidth;
+      button.classList.add('is-pulsing');
+    }
+
     function readStoredState() {
       try {
         return window.localStorage.getItem(storageKey) === 'true';
@@ -446,6 +452,7 @@
       document.body.classList.toggle('teleprompter-active', isPlaying);
       if (host._updateScrollRegionHeight) host._updateScrollRegionHeight();
       writeStoredState(isPlaying);
+      pulseButton(toggle);
     }
 
     function stop() {
@@ -487,6 +494,10 @@
       } else {
         start();
       }
+    });
+
+    toggle.addEventListener('animationend', function (event) {
+      if (event.animationName === 'toggle-pulse') toggle.classList.remove('is-pulsing');
     });
 
     document.addEventListener('visibilitychange', function () {
@@ -605,6 +616,13 @@
     bar.appendChild(toggle);
 
     var host = this;
+
+    function pulseButton(button) {
+      button.classList.remove('is-pulsing');
+      void button.offsetWidth;
+      button.classList.add('is-pulsing');
+    }
+
     toggle.addEventListener('click', function () {
       var hidden = host.getAttribute('data-chords-hidden') === 'true';
       if (hidden) {
@@ -622,6 +640,11 @@
         var sobres = host._root.querySelectorAll('.letra .sobre');
         for (var i = 0; i < sobres.length; i++) sobres[i].style.marginRight = '';
       }
+      pulseButton(toggle);
+    });
+
+    toggle.addEventListener('animationend', function (event) {
+      if (event.animationName === 'toggle-pulse') toggle.classList.remove('is-pulsing');
     });
   };
 
