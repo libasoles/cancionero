@@ -50,7 +50,7 @@ Documentado en la cabecera de `assets/song-sheet.js`. Resumen:
 <div class="letra">
   <p class="estrofa">
     <span class="seccion">Estrofa 1</span>
-    <span class="sobre"><span class="c">Do</span>&nbsp;&nbsp;&nbsp;</span>Texto de la línea<br>
+    <span class="sobre"><span class="c">Do</span></span>Texto de la línea<br>
     Vieja soled<span class="sobre"><span class="c">Fa</span>ad</span>, tan mala compañera<br>
     ...
   </p>
@@ -63,16 +63,26 @@ Documentado en la cabecera de `assets/song-sheet.js`. Resumen:
 - Un `.estrofa` por estrofa/sección.
 - `.seccion` es la etiqueta visible (Estrofa 1, Estribillo, Puente, etc.).
 - `.sobre` envuelve la sílaba sobre la que cae el acorde; `.c` adentro es el
-  nombre del acorde y debe renderizarse en tipografía sans. Si el acorde cae
-  antes del verso (silencio inicial), se usa `.sobre` con `&nbsp;` en vez de
-  texto.
+  nombre del acorde y debe renderizarse en tipografía sans.
+- Acorde sin letra debajo (ej. un renglón de introducción instrumental, o un
+  acorde de paso al final de un verso): `.sobre` va **vacío**, sin `&nbsp;`
+  ni texto de relleno — `<span class="sobre"><span class="c">E7</span></span>`.
+  El espaciado entre acordes consecutivos sin letra lo resuelve solo
+  `song-sheet.js` (mide el ancho del acorde contra su `.sobre` y agrega el
+  `margin-right` que haga falta); inventar `&nbsp;` a mano además queda
+  subrayado por el CSS de `.sobre` y se ve como un guión bajo debajo del
+  acorde. Si hace falta separar un acorde de una palabra real vecina en la
+  misma línea, un espacio normal alcanza — nunca `_`.
 - Saltos de línea con `<br>` dentro del mismo `<p class="estrofa">`.
 
 ## Plantilla de página nueva
 
 Copiá el boilerplate exacto de una página existente (`songs/sin-palabritas.html`
-es la referencia) — mismo header con el logo SVG, mismo `<link>` y `<script>`
-relativos a `../assets/`. Lo que cambia por canción:
+es la referencia) — mismo header con el logo SVG, mismo `<link>` y los mismos
+`<script>` relativos a `../assets/` (en este orden: `vendor/svguitar.umd.js`,
+`chords-db.js`, `chord-modal.js`, `song-sheet.js`; los primeros tres habilitan
+el diagrama de digitación que se abre al hacer click sobre un acorde). Lo que
+cambia por canción:
 
 ```html
 <title>{Título} · Letras</title>
@@ -84,7 +94,7 @@ relativos a `../assets/`. Lo que cambia por canción:
 <div class="letra">
   <p class="estrofa">
     <span class="seccion">Estrofa 1</span>
-    <span class="sobre"><span class="c">{Acorde}</span>&nbsp;&nbsp;&nbsp;</span>{Línea 1}<br>
+    <span class="sobre"><span class="c">{Acorde}</span></span>{Línea 1}<br>
     {Línea 2 con markup de acordes}
   </p>
 </div>
