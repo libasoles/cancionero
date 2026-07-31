@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m http.server 8934 >/tmp/httpserver.log 2>&1 & *)",
+      "Bash(npm ls *)",
+      "Bash(npx --yes playwright --version)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8934/songs/sin-palabritas.html)",
+      "Read(//Users/guillermoperez/Library/Caches/ms-playwright/**)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(node test.js)",
+      "Bash(pkill -f \"http.server 8934\")"
+    ],
+    "additionalDirectories": [
+      "/private/tmp"
+    ]
+  }
+}

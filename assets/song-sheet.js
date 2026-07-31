@@ -49,8 +49,12 @@
     ':host { display: block; }',
     '*, *::before, *::after { box-sizing: border-box; }',
     '',
-    '/* Átomo de acorde: color + peso. En el sitio hereda --accent de lesson.css. */',
-    '.c { color: var(--accent, #8b0000); font-weight: 700; }',
+    '/* Átomo de acorde: color + peso. Los nombres de acordes van siempre en sans. */',
+    '.c {',
+    '  color: var(--accent, #8b0000);',
+    '  font-family: var(--sans, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif);',
+    '  font-weight: 700;',
+    '}',
     '',
     '/* Bloque de letra: sólo aporta el interlineado para que el acorde tenga',
     '   aire arriba de cada línea. */',
@@ -58,6 +62,7 @@
     '  font-family: var(--serif, Georgia, "Times New Roman", serif);',
     '  font-size: 1.35rem;',
     '  line-height: 3.1;',
+    '  white-space: normal;',
     '  background: #fff;',
     '  border: 1px solid var(--rule, #d8d2c4);',
     '  border-left: 3px solid var(--accent, #8b0000);',
@@ -97,6 +102,22 @@
     '  line-height: 1;',
     '  white-space: nowrap;',
     '  letter-spacing: 0.01em;',
+    '}',
+    ':host([data-chords-hidden="true"]) .letra {',
+    '  line-height: 1.7;',
+    '}',
+    ':host([data-chords-hidden="true"]) .letra .seccion {',
+    '  margin-bottom: 0.9rem;',
+    '}',
+    ':host([data-chords-hidden="true"]) .letra .sobre {',
+    '  display: inline;',
+    '  text-decoration: none;',
+    '}',
+    ':host([data-chords-hidden="true"]) .letra .sobre .c {',
+    '  display: none;',
+    '}',
+    ':host([data-chords-hidden="true"]) .letra .sobre[data-chord-only="true"] {',
+    '  display: none;',
     '}',
     '',
     '/* ----- Impresión ----- */',
@@ -156,6 +177,29 @@
     }).join('/');
   }
 
+  // La tonalidad (data-key="Re menor") se anota en solfeo español, distinto
+  // de las letras (C, D, E...) que usan los .c. Se transpone por separado y
+  // se muestra en el widget: el usuario reconoce "Mi menor", no un desplazo
+  // en semitonos.
+  var SHARP_NAMES_ES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
+  var FLAT_NAMES_ES = ['Do', 'Reb', 'Re', 'Mib', 'Mi', 'Fa', 'Solb', 'Sol', 'Lab', 'La', 'Sib', 'Si'];
+  var NOTE_INDEX_ES = {
+    Do: 0, 'Do#': 1, Reb: 1, Re: 2, 'Re#': 3, Mib: 3, Mi: 4, Fa: 5,
+    'Fa#': 6, Solb: 6, Sol: 7, 'Sol#': 8, Lab: 8, La: 9, 'La#': 10, Sib: 10, Si: 11
+  };
+  var KEY_RE = /^(Do|Re|Mi|Fa|Sol|La|Si)(#|b)?\s+(mayor|menor)$/i;
+
+  function transposeKeyName(keyText, semitones, useFlats) {
+    var m = KEY_RE.exec(keyText.trim());
+    if (!m) return null;
+    var root = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase() + (m[2] || '');
+    var idx = NOTE_INDEX_ES[root];
+    if (idx === undefined) return null;
+    var newIdx = ((idx + semitones) % 12 + 12) % 12;
+    var names = useFlats ? FLAT_NAMES_ES : SHARP_NAMES_ES;
+    return names[newIdx] + ' ' + m[3].toLowerCase();
+  }
+
   class SongSheet extends HTMLElement {}
 
   SongSheet.prototype.connectedCallback = function () {
@@ -178,7 +222,17 @@
       root.appendChild(this.firstChild);
     }
 
+    this._markChordOnlySpans(root);
     this._mountTranspose(root);
+    this._mountChordToggle();
+  };
+
+  SongSheet.prototype._markChordOnlySpans = function (root) {
+    var spans = root.querySelectorAll('.sobre');
+    for (var i = 0; i < spans.length; i++) {
+      var text = spans[i].textContent.replace(/\u00a0/g, ' ').trim();
+      if (!text) spans[i].dataset.chordOnly = 'true';
+    }
   };
 
   // Widget de transposición: vive en el header de la página (no en el shadow
@@ -186,8 +240,9 @@
   // letra. Sube o baja medio tono todos los .c del shadow root. Guardamos el
   // nombre original de cada acorde en un dataset para recalcular siempre
   // desde la fuente y evitar que redondeos se acumulen entre clics. El
-  // indicador central tiene ancho fijo y siempre es un número (nunca aparece
-  // ni desaparece texto), para que no haya layout shift al usarlo.
+  // indicador central tiene ancho fijo y muestra la tonalidad transpuesta
+  // (ej. "Mi menor"); si no hay data-key (página vieja o valor no parseable)
+  // cae a mostrar el desplazo en semitonos, para no dejar el widget vacío.
   SongSheet.prototype._mountTranspose = function (root) {
     var chords = root.querySelectorAll('.c');
     var header = document.querySelector('.site-header');
@@ -203,11 +258,14 @@
     }
     if (hasSharp) useFlats = false;
 
+    var originalKey = this.dataset.key || '';
+
     var widget = document.createElement('div');
     widget.className = 'transpose';
     widget.innerHTML =
       '<button type="button" class="t-down" aria-label="Bajar medio tono">−</button>' +
-      '<button type="button" class="t-current" aria-label="Restablecer tono original" title="Restablecer tono original">0</button>' +
+      '<button type="button" class="t-current" aria-label="Restablecer tono original" title="Restablecer tono original">' +
+        (originalKey || '0') + '</button>' +
       '<button type="button" class="t-up" aria-label="Subir medio tono">+</button>';
     header.appendChild(widget);
 
@@ -218,7 +276,8 @@
       for (var i = 0; i < chords.length; i++) {
         chords[i].textContent = transposeChord(chords[i].dataset.original, semitones, useFlats);
       }
-      current.textContent = semitones === 0 ? '0' : (semitones > 0 ? '+' + semitones : String(semitones));
+      var keyName = originalKey ? transposeKeyName(originalKey, semitones, useFlats) : null;
+      current.textContent = keyName || (semitones === 0 ? '0' : (semitones > 0 ? '+' + semitones : String(semitones)));
     }
 
     widget.querySelector('.t-down').addEventListener('click', function () {
@@ -232,6 +291,52 @@
     current.addEventListener('click', function () {
       semitones = 0;
       render();
+    });
+  };
+
+  SongSheet.prototype._mountChordToggle = function () {
+    var title = document.querySelector('h1');
+    if (!title) return;
+
+    var bar = title.parentNode && title.parentNode.classList && title.parentNode.classList.contains('song-titlebar')
+      ? title.parentNode
+      : null;
+
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.className = 'song-titlebar';
+      title.parentNode.insertBefore(bar, title);
+      bar.appendChild(title);
+    }
+
+    if (bar.querySelector('.chord-toggle')) return;
+
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'chord-toggle';
+    toggle.setAttribute('aria-pressed', 'true');
+    toggle.setAttribute('aria-label', 'Ocultar acordes');
+    toggle.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<path d="m11.9 12.1 4.514-4.514"></path>' +
+      '<path d="M20.1 2.3a1 1 0 0 0-1.4 0l-1.114 1.114A2 2 0 0 0 17 4.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 17.828 7h1.344a2 2 0 0 0 1.414-.586L21.7 5.3a1 1 0 0 0 0-1.4z"></path>' +
+      '<path d="m6 16 2 2"></path>' +
+      '<path d="M8.23 9.85A3 3 0 0 1 11 8a5 5 0 0 1 5 5 3 3 0 0 1-1.85 2.77l-.92.38A2 2 0 0 0 12 18a4 4 0 0 1-4 4 6 6 0 0 1-6-6 4 4 0 0 1 4-4 2 2 0 0 0 1.85-1.23z"></path>' +
+      '</svg>';
+    bar.appendChild(toggle);
+
+    var host = this;
+    toggle.addEventListener('click', function () {
+      var hidden = host.getAttribute('data-chords-hidden') === 'true';
+      if (hidden) {
+        host.removeAttribute('data-chords-hidden');
+        toggle.setAttribute('aria-pressed', 'true');
+        toggle.setAttribute('aria-label', 'Ocultar acordes');
+      } else {
+        host.setAttribute('data-chords-hidden', 'true');
+        toggle.setAttribute('aria-pressed', 'false');
+        toggle.setAttribute('aria-label', 'Mostrar acordes');
+      }
     });
   };
 

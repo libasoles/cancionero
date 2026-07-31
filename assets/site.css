@@ -45,6 +45,7 @@ a { color: var(--accent); }
   align-items: center;
   gap: 0.7rem;
   border-bottom: none;
+  text-decoration: none;
   color: var(--ink);
 }
 .site-header a.brand:hover { color: var(--accent); }
@@ -58,7 +59,7 @@ a { color: var(--accent); }
 .site-header .logo .string { stroke: currentColor; stroke-width: 2; opacity: 0.5; }
 .site-header .logo .dot { fill: var(--accent); }
 .site-header .wordmark {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 600;
   font-size: 1.05rem;
   letter-spacing: -0.01em;
@@ -102,13 +103,17 @@ a { color: var(--accent); }
   justify-content: center;
 }
 .site-header .transpose .t-current {
-  width: 2.1rem;
+  width: 6rem;
   border: none;
   text-align: center;
-  font-family: var(--mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.82rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .site-header .transpose button:hover,
 .site-header .transpose button:focus-visible {
@@ -125,10 +130,54 @@ a { color: var(--accent); }
 @media print { .site-header { display: none; } }
 
 h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; }
-h1 { font-size: 2.2rem; margin: 0 0 0.2rem; }
+h1 { font-size: 2.2rem; margin: 0 0 0.08rem; line-height: 1.05; }
 h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.3rem; }
 
-.lead { color: var(--ink-soft); font-size: 1.05rem; }
+.song-titlebar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 0.2rem;
+}
+
+.song-titlebar h1 {
+  margin: 0;
+}
+
+.chord-toggle {
+  appearance: none;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chord-toggle svg {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.chord-toggle:hover,
+.chord-toggle:focus-visible {
+  color: var(--accent);
+  outline: none;
+}
+
+.chord-toggle[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+.lead { color: var(--ink-soft); font-size: 1.05rem; margin: 0 0 0.65rem; line-height: 1.15; }
 
 .source-link {
   margin: 1rem 0 0;
@@ -171,3 +220,15 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
 .toc .title { font-size: 1.2rem; font-weight: 600; }
 .toc .title a { border-bottom: none; }
 .toc .desc { grid-column: 2; color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+
+@media (max-width: 640px) {
+  .song-titlebar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .chord-toggle {
+    align-self: flex-start;
+  }
+}

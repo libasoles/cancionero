@@ -24,6 +24,10 @@ chat, seguí este flujo.
      `<song-sheet>`.
 2. Generá la página completa en `songs/<slug>.html`, usando el mismo patrón
    visual y estructural de las páginas ya existentes en `songs/`.
+   Priorizá economizar espacio vertical: el título y el subtítulo (`.lead`)
+   deben quedar bien juntos y, en general, la página debe aprovechar la mayor
+   cantidad de contenido posible dentro de la pantalla sin agregar aire
+   innecesario.
 3. Agregá o actualizá la entrada correspondiente en `index.html` dentro del
    `<ol class="toc">`, siguiendo el mismo patrón que las entradas existentes.
    Si la canción ya está completa, no agregues una descripción redundante
@@ -57,8 +61,9 @@ Documentado en la cabecera de `assets/song-sheet.js`. Resumen:
 - Un `.estrofa` por estrofa/sección.
 - `.seccion` es la etiqueta visible (Estrofa 1, Estribillo, Puente, etc.).
 - `.sobre` envuelve la sílaba sobre la que cae el acorde; `.c` adentro es el
-  nombre del acorde. Si el acorde cae antes del verso (silencio inicial), se
-  usa `.sobre` con `&nbsp;` en vez de texto.
+  nombre del acorde y debe renderizarse en tipografía sans. Si el acorde cae
+  antes del verso (silencio inicial), se usa `.sobre` con `&nbsp;` en vez de
+  texto.
 - Saltos de línea con `<br>` dentro del mismo `<p class="estrofa">`.
 
 ## Plantilla de página nueva
@@ -73,7 +78,7 @@ relativos a `../assets/`. Lo que cambia por canción:
 <h1>{Título}</h1>
 <p class="lead">{Artista}{, Capo N si aplica}</p>
 
-<song-sheet>
+<song-sheet data-key="{Tonalidad en solfeo español, ej. Re menor}">
 <div class="letra">
   <p class="estrofa">
     <span class="seccion">Estrofa 1</span>
@@ -83,6 +88,14 @@ relativos a `../assets/`. Lo que cambia por canción:
 </div>
 </song-sheet>
 ```
+
+`data-key` es obligatorio: el widget de transposición del header lo lee para
+mostrar la tonalidad transpuesta (ej. "Mi menor") en vez de un número de
+semitonos. Formato exacto: nota en solfeo español (Do, Re, Mi, Fa, Sol, La,
+Si, con `#` o `b` si corresponde) + espacio + `mayor` o `menor`.
+
+Mantené el `h1` y `.lead` visualmente compactos, con separación mínima entre
+ambos.
 
 Después, agregá la entrada correspondiente en `index.html` dentro del
 `<ol class="toc">`, siguiendo el mismo patrón que las entradas existentes
