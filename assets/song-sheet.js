@@ -300,6 +300,28 @@
     var current = widget.querySelector('.t-current');
     var semitones = 0;
     var host = this;
+    var storageKey = 'song-sheet:transpose:' + window.location.pathname;
+
+    function readStoredSemitones() {
+      try {
+        var raw = window.localStorage.getItem(storageKey);
+        if (raw == null) return 0;
+        var parsed = parseInt(raw, 10);
+        return isNaN(parsed) ? 0 : parsed;
+      } catch (err) {
+        return 0;
+      }
+    }
+
+    function writeStoredSemitones(value) {
+      try {
+        if (value === 0) {
+          window.localStorage.removeItem(storageKey);
+        } else {
+          window.localStorage.setItem(storageKey, String(value));
+        }
+      } catch (err) {}
+    }
 
     function render() {
       for (var i = 0; i < chords.length; i++) {
@@ -308,6 +330,7 @@
       var keyName = originalKey ? transposeKeyName(originalKey, semitones, useFlats) : null;
       current.textContent = keyName || (semitones === 0 ? '0' : (semitones > 0 ? '+' + semitones : String(semitones)));
       current.classList.toggle('is-transposed', semitones !== 0);
+      writeStoredSemitones(semitones);
       // Un acorde transpuesto puede cambiar de ancho (ej. "A" -> "A#"), así
       // que hay que recalcular la regla anti-solape en cada transposición.
       host._preventChordOverlap(root);
@@ -325,6 +348,9 @@
       semitones = 0;
       render();
     });
+
+    semitones = readStoredSemitones();
+    render();
   };
 
   SongSheet.prototype._mountChordToggle = function () {
