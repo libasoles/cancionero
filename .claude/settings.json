@@ -11,7 +11,17 @@
       "Bash(node test.js)",
       "Bash(pkill -f \"http.server 8934\")",
       "WebFetch(domain:www.cifraclub.com)",
-      "Bash(python3)"
+      "Bash(python3)",
+      "Read(//Users/guillermoperez/Projects/more/guitar-chords/src/site/**)",
+      "Read(//Users/guillermoperez/Projects/more/guitar-chords/src/shared/**)",
+      "Read(//Users/guillermoperez/Projects/more/guitar-chords/**)",
+      "Read(//Users/guillermoperez/Projects/more/guitar-chords/scripts/**)",
+      "Bash(npx playwright *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(python3 render.py sources/como-arbolito-en-otono-pre.txt)",
+      "Bash(python3 render.py sources/igual-que-pajaro-herido-pre.txt)",
+      "Bash(python3 render.py sources/para-los-ojos-mas-bellos-pre.txt)"
     ],
     "additionalDirectories": [
       "/private/tmp"

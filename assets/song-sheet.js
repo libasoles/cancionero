@@ -226,6 +226,8 @@
     this._preventChordOverlap(root);
     this._mountTranspose(root);
     this._mountChordToggle();
+    this._mountScrollRegion();
+    this._mountTeleprompter();
   };
 
   SongSheet.prototype._markChordOnlySpans = function (root) {
@@ -351,6 +353,162 @@
 
     semitones = readStoredSemitones();
     render();
+  };
+
+  SongSheet.prototype._mountTeleprompter = function () {
+    var bar = document.querySelector('.song-titlebar');
+    if (!bar) return;
+    var host = this;
+
+    var controls = bar.querySelector('.song-controls');
+    if (!controls) {
+      controls = document.createElement('div');
+      controls.className = 'song-controls';
+      bar.appendChild(controls);
+    }
+
+    var chordToggle = bar.querySelector('.chord-toggle');
+    if (chordToggle && chordToggle.parentNode !== controls) {
+      controls.appendChild(chordToggle);
+    }
+
+    if (controls.querySelector('.teleprompter-toggle')) return;
+
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'teleprompter-toggle';
+    toggle.setAttribute('aria-pressed', 'false');
+    controls.appendChild(toggle);
+
+    var playIcon =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"/>' +
+      '<path d="M7 21h10"/>' +
+      '<rect width="20" height="14" x="2" y="3" rx="2"/>' +
+      '</svg>';
+    var pauseIcon =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<path d="M10 13V7"/>' +
+      '<path d="M14 13V7"/>' +
+      '<rect width="20" height="14" x="2" y="3" rx="2"/>' +
+      '<path d="M12 17v4"/>' +
+      '<path d="M8 21h8"/>' +
+      '</svg>';
+
+    var storageKey = 'song-sheet:teleprompter:' + window.location.pathname;
+    var isPlaying = false;
+    var timerId = 0;
+    var speed = 0.45;
+
+    function readStoredState() {
+      try {
+        return window.localStorage.getItem(storageKey) === 'true';
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function writeStoredState(value) {
+      try {
+        if (value) {
+          window.localStorage.setItem(storageKey, 'true');
+        } else {
+          window.localStorage.removeItem(storageKey);
+        }
+      } catch (err) {}
+    }
+
+    function render() {
+      toggle.innerHTML = isPlaying ? pauseIcon : playIcon;
+      toggle.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+      toggle.setAttribute('aria-label', isPlaying ? 'Pausar teleprompter' : 'Activar teleprompter');
+      toggle.title = isPlaying ? 'Pausar teleprompter' : 'Activar teleprompter';
+      writeStoredState(isPlaying);
+    }
+
+    function stop() {
+      isPlaying = false;
+      if (timerId) {
+        window.clearInterval(timerId);
+        timerId = 0;
+      }
+      render();
+    }
+
+    function step() {
+      var scroller = host._scrollRegion;
+      if (!scroller) {
+        stop();
+        return;
+      }
+
+      var maxScroll = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+      if (scroller.scrollTop >= maxScroll - 1) {
+        stop();
+        return;
+      }
+
+      scroller.scrollTop = Math.min(maxScroll, scroller.scrollTop + speed);
+    }
+
+    function start() {
+      if (isPlaying) return;
+      isPlaying = true;
+      render();
+      step();
+      timerId = window.setInterval(step, 16);
+    }
+
+    toggle.addEventListener('click', function () {
+      if (isPlaying) {
+        stop();
+      } else {
+        start();
+      }
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && isPlaying) stop();
+    });
+
+    window.addEventListener('beforeunload', function () {
+      if (timerId) window.clearInterval(timerId);
+    });
+
+    if (readStoredState()) start();
+    else render();
+  };
+
+  SongSheet.prototype._mountScrollRegion = function () {
+    if (this._scrollRegion) return;
+
+    var wrapper = document.createElement('div');
+    wrapper.className = 'song-scroll-region';
+
+    var parent = this.parentNode;
+    if (!parent) return;
+
+    parent.insertBefore(wrapper, this);
+    wrapper.appendChild(this);
+
+    var next = wrapper.nextElementSibling;
+    if (next && next.classList && next.classList.contains('source-link')) {
+      wrapper.appendChild(next);
+    }
+
+    document.body.classList.add('has-song-scroll-region');
+    this._scrollRegion = wrapper;
+
+    function updateHeight() {
+      var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      var top = wrapper.getBoundingClientRect().top;
+      var height = Math.max(180, viewportHeight - top - 16);
+      wrapper.style.height = height + 'px';
+    }
+
+    this._updateScrollRegionHeight = updateHeight;
+    window.addEventListener('resize', updateHeight);
+    updateHeight();
   };
 
   SongSheet.prototype._mountChordToggle = function () {

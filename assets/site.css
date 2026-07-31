@@ -27,6 +27,12 @@ body {
   font-size: 19px;
 }
 
+body.has-song-scroll-region {
+  height: 100vh;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
@@ -44,9 +50,10 @@ a {
   border-bottom: 1px solid var(--rule);
 }
 .site-header a.brand {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 40px auto;
   align-items: center;
-  gap: 0.7rem;
+  column-gap: 0.7rem;
   border-bottom: none;
   text-decoration: none;
   color: var(--ink);
@@ -77,7 +84,6 @@ a {
   letter-spacing: 0.1em;
   color: var(--ink-soft);
 }
-
 /* ----- Widget de transposición (inyectado por song-sheet.js en el header) ----- */
 
 .site-header .transpose {
@@ -139,17 +145,24 @@ h1 { font-size: 2.2rem; margin: 0 0 0.08rem; line-height: 1.05; }
 h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.3rem; }
 
 .song-titlebar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
+  position: relative;
   margin: 0 0 0.2rem;
+  min-height: 2.7rem;
 }
 
 .song-titlebar h1 {
   margin: 0;
-  flex: 1 1 auto;
-  min-width: 0;
+}
+
+.song-controls {
+  position: absolute;
+  top: 0;
+  right: -0.35rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  width: 2.9rem;
 }
 
 .chord-toggle {
@@ -177,15 +190,56 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
 
 .chord-toggle:hover,
 .chord-toggle:focus-visible {
-  color: var(--accent);
   outline: none;
+}
+
+.chord-toggle[aria-pressed="false"] {
+  color: var(--ink-soft);
 }
 
 .chord-toggle[aria-pressed="true"] {
   color: var(--accent);
 }
 
+.chord-toggle[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+.teleprompter-toggle {
+  appearance: none;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 0;
+  width: 2.7rem;
+  height: 2.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teleprompter-toggle svg {
+  width: 1.55rem;
+  height: 1.55rem;
+  stroke-width: 1.8;
+}
+
+.teleprompter-toggle:hover,
+.teleprompter-toggle:focus-visible,
+.teleprompter-toggle[aria-pressed="true"] {
+  color: var(--accent);
+  outline: none;
+}
+
 .lead { color: var(--ink-soft); font-size: 1.05rem; margin: 0 0 0.65rem; line-height: 1.15; }
+
+.song-scroll-region {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 0 1rem;
+}
 
 .source-link {
   margin: 1rem 0 0;
@@ -303,9 +357,15 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
     padding: 0 1rem;
   }
 
+  body.has-song-scroll-region {
+    height: 100vh;
+  }
+
   .song-titlebar {
-    align-items: flex-start;
-    flex-direction: row;
-    gap: 0.5rem;
+    min-height: 2.5rem;
+  }
+
+  .song-controls {
+    right: -0.15rem;
   }
 }

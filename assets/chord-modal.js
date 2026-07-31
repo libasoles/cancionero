@@ -91,7 +91,7 @@
     svg.setAttribute('viewBox', minX + ' ' + minY + ' ' + width + ' ' + (height + delta));
   }
 
-  function alignOpenStringMarkers(svg) {
+  function alignHeaderIndicators(svg) {
     if (!svg) return;
     var root = svg.querySelector('g') || svg;
     var nut = Array.prototype.find.call(root.querySelectorAll('line'), function (line) {
@@ -104,10 +104,33 @@
     var metrics = headerSpacingMetrics();
     var targetCy = nutY - metrics.markerSize / 2 - metrics.markerPadding - DEFAULT_NUT_WIDTH / 2;
     var targetR = metrics.markerSize / 2;
-    root.querySelectorAll('circle.finger-circle[class*="fret-NaN"]').forEach(function (circle) {
-      circle.setAttribute('cy', String(targetCy));
-      circle.setAttribute('r', String(targetR));
-    });
+    for (var i = 0; i < DIAGRAM_CONFIG.strings; i++) {
+      var stringLine = root.querySelector('.string-' + i);
+      if (!stringLine) continue;
+      var stringX = Number(stringLine.getAttribute('x1'));
+      if (isNaN(stringX)) continue;
+
+      var text = root.querySelector('.string-text-' + i);
+      if (text) {
+        text.setAttribute('x', String(stringX));
+        text.setAttribute('y', String(targetCy));
+      }
+
+      var openString = root.querySelector('.open-string-' + i);
+      if (openString) {
+        openString.setAttribute('cx', String(stringX));
+        openString.setAttribute('cy', String(targetCy));
+        openString.setAttribute('r', String(targetR));
+      }
+
+      root.querySelectorAll('.silent-string-' + i).forEach(function (line) {
+        var descendsRight = Number(line.getAttribute('x1')) <= Number(line.getAttribute('x2'));
+        line.setAttribute('x1', String(descendsRight ? stringX - targetR : stringX + targetR));
+        line.setAttribute('x2', String(descendsRight ? stringX + targetR : stringX - targetR));
+        line.setAttribute('y1', String(descendsRight ? targetCy - targetR : targetCy + targetR));
+        line.setAttribute('y2', String(descendsRight ? targetCy + targetR : targetCy - targetR));
+      });
+    }
   }
 
   // svguitar dibuja cada dedo en su traste ABSOLUTO dentro de la ventana de
@@ -134,7 +157,7 @@
 
     var svg = target.querySelector('svg');
     normalizeHeaderSpacing(svg, chord);
-    alignOpenStringMarkers(svg);
+    alignHeaderIndicators(svg);
   }
 
   // ----- Modal -----
