@@ -1,8 +1,8 @@
-# Letras
+# Cancionero
 
-Cancionero personal.
+Proyecto personal.
 
-No es un proyecto armado para revisión de recruiters ni codigo útil para procesos de selección.
+No es para revisión de recruiters. No hay nada de código escrito por mí.
 
 ## Estructura
 
