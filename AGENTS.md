@@ -115,6 +115,66 @@ Después, agregá la entrada correspondiente en `index.html` dentro del
 falta aclarar algo no obvio, como un pendiente). Los links del sitio deben
 verse sin subrayado.
 
+## Tarea: auditar y corregir la alineación de acordes de canciones existentes
+
+Cuando el usuario pida revisar si los acordes de una o varias canciones están
+bien alineados con la letra (descuadrados, corridos, mal puestos), no alcanza
+con leer el HTML y "ver si parece razonable": hay que comparar carácter a
+carácter contra la fuente original, porque el bug más común es sutil y no se
+nota a simple vista.
+
+1. **Conseguí el cifrado fuente en texto plano, con columnas.** Para Cifra
+   Club, `curl -A "Mozilla/5.0" <url>` y extraé el bloque
+   `<pre data-chord-content="true">...</pre>`. Adentro, cada acorde es un
+   `<b data-chord-name="...">` y cada línea de letra es texto plano; la
+   posición de columna del acorde dentro de su línea de texto (contando
+   antes de sacar las etiquetas `<b>`) es la que indica sobre qué sílaba cae,
+   igual que en un cifrado ASCII de acorde-sobre-letra. Para Ultimate Guitar
+   u otras fuentes sin esta estructura, extraé el bloque de texto plano
+   equivalente a mano.
+2. **Extraé la secuencia de acordes de la fuente y de la página actual**
+   (`grep -o 'data-chord-name="[^"]*"'` contra `grep -o '<span class="c">[^<]*</span>'`)
+   y compará. Si no coinciden en cantidad u orden, hay un problema real, no
+   una diferencia de estilo.
+3. **El bug más frecuente encontrado en este cancionero es un corrimiento en
+   cascada**: una línea de la letra que en la fuente no lleva acorde (queda
+   sonando el acorde anterior, típico en la segunda mitad de una copla)
+   aparece en la página con un acorde igual — y como consecuencia, todos los
+   acordes de ahí en adelante quedan pegados una línea más tarde de lo que
+   corresponde. Se detecta comparando, línea por línea, qué texto de la
+   fuente lleva acorde propio y cuál es continuación sin acorde.
+4. **Otro bug frecuente es "amontonar" varios acordes al final de la última
+   palabra de la línea** (ej. `...entreg<span class="c">A</span><span
+   class="c">B7</span><span class="c">E</span>.`) cuando en la fuente esos
+   acordes en realidad caen sobre palabras distintas, más tempranas en la
+   línea. Se nota porque hay 2-3 acordes consecutivos sin ninguna letra real
+   entre ellos, sobre la cola de una sola palabra.
+5. **Reconstruí la línea con un script, no a mano.** Con la columna exacta de
+   cada acorde y el texto de la línea, partí la línea en palabras (por
+   espacio) y asigná cada acorde a la palabra que contiene su columna;
+   cuando dos acordes caen en la misma palabra, el primero se corta donde
+   empieza el segundo. Esto reproduce el estilo ya establecido en el
+   cancionero (el acorde subraya desde su sílaba hasta el final de la
+   palabra) de forma mecánica y sin errores de conteo manual.
+6. **Cuando la fuente sólo transcribe una estrofa/estribillo una vez** (y el
+   resto dice "se repite" o directamente no vuelve a poner acordes), aplicá
+   el mismo patrón a las estrofas repetidas usando la posición
+   *proporcional* dentro de la línea (columna del acorde ÷ longitud de la
+   línea de referencia × longitud de la línea nueva), no la columna
+   absoluta. Dejá un comentario en el HTML aclarando qué quedó verificado
+   carácter a carácter contra la fuente y qué se dedujo por patrón, para que
+   la próxima auditoría sepa cuánto confiar en cada parte.
+7. **No copies ciegamente la fuente si es inconsistente consigo misma**
+   (ej. el mismo verso repetido dos veces en la canción trae distinto
+   cifrado cada vez, o falta un acorde que en todas las demás repeticiones
+   sí aparece) ni si cambia la calidad de un acorde de forma que no encaja
+   con el resto (ej. mayor en vez de menor en una canción claramente menor).
+   Preferí la versión más consistente con el resto de la canción y dejalo
+   anotado en el comentario.
+8. Verificá al final que la cantidad de `<span` y `</span>` en el archivo
+   coincida (`grep -o '<span' archivo | wc -l` vs `grep -o '</span>' archivo | wc -l`)
+   como chequeo rápido de que no quedó ninguna etiqueta mal cerrada.
+
 ## Corrección de este documento
 
 Si el usuario corrige el formato, la estructura, o el flujo descrito acá,
