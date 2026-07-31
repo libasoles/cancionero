@@ -1,0 +1,102 @@
+/* Stylesheet for "letras" — cancionero: letras de canciones con acordes.
+   Header + índice adaptados de assets/lesson.css del proyecto "acordes";
+   el estilo del cancionero en sí vive encapsulado en song-sheet.js. */
+
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #555;
+  --paper: #fdfaf5;
+  --rule: #d8d2c4;
+  --accent: #8b0000;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --max-width: 760px;
+}
+
+html { background: var(--paper); }
+
+body {
+  font-family: var(--serif);
+  color: var(--ink);
+  background: var(--paper);
+  max-width: var(--max-width);
+  margin: 3rem auto 6rem;
+  padding: 0 1.5rem;
+  line-height: 1.55;
+  font-size: 19px;
+}
+
+a { color: var(--accent); }
+
+/* ----- Header / logo ----- */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.6rem;
+  border-bottom: 1px solid var(--rule);
+}
+.site-header a.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-bottom: none;
+  color: var(--ink);
+}
+.site-header a.brand:hover { color: var(--accent); }
+.site-header .logo {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  display: block;
+}
+.site-header .logo .frame { fill: none; stroke: currentColor; stroke-width: 4; }
+.site-header .logo .string { stroke: currentColor; stroke-width: 2; opacity: 0.5; }
+.site-header .logo .dot { fill: var(--accent); }
+.site-header .wordmark {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.site-header .wordmark small {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+@media print { .site-header { display: none; } }
+
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; }
+h1 { font-size: 2.2rem; margin: 0 0 0.2rem; }
+h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.3rem; }
+
+.lead { color: var(--ink-soft); font-size: 1.05rem; }
+
+/* ----- Índice de canciones ----- */
+
+.toc { list-style: none; padding: 0; margin: 1.5rem 0; }
+.toc li {
+  border-bottom: 1px solid var(--rule);
+  padding: 1rem 0;
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 0.4rem 0.9rem;
+  align-items: baseline;
+}
+.toc .num {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+.toc .title { font-size: 1.2rem; font-weight: 600; }
+.toc .title a { border-bottom: none; }
+.toc .desc { grid-column: 2; color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
