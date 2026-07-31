@@ -26,6 +26,9 @@ chat, seguí este flujo.
    visual y estructural de las páginas ya existentes en `songs/`.
 3. Agregá o actualizá la entrada correspondiente en `index.html` dentro del
    `<ol class="toc">`, siguiendo el mismo patrón que las entradas existentes.
+4. Al terminar cada canción, hacé un commit. Si resulta más eficiente, podés
+   agrupar varios temas terminados en una misma tanda de commits, pero no
+   dejes canciones terminadas sin commitear.
 
 ## Contrato de markup de `<song-sheet>`
 
