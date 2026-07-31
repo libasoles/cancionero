@@ -418,11 +418,33 @@
       } catch (err) {}
     }
 
+    function syncFloatingPosition() {
+      var rect = toggle.getBoundingClientRect();
+      document.body.style.setProperty('--teleprompter-float-top', rect.top + 'px');
+      document.body.style.setProperty('--teleprompter-float-left', rect.left + 'px');
+      document.body.style.setProperty('--teleprompter-float-width', rect.width + 'px');
+      document.body.style.setProperty('--teleprompter-float-height', rect.height + 'px');
+    }
+
+    function syncTeleprompterOverlayOffset() {
+      var scroller = host._scrollRegion;
+      if (!scroller) return;
+      document.body.style.setProperty('--teleprompter-overlay-offset', scroller.getBoundingClientRect().top + 'px');
+    }
+
     function render() {
       toggle.innerHTML = isPlaying ? pauseIcon : playIcon;
       toggle.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
       toggle.setAttribute('aria-label', isPlaying ? 'Pausar teleprompter' : 'Activar teleprompter');
       toggle.title = isPlaying ? 'Pausar teleprompter' : 'Activar teleprompter';
+      if (isPlaying) {
+        syncFloatingPosition();
+        syncTeleprompterOverlayOffset();
+      } else {
+        document.body.style.removeProperty('--teleprompter-overlay-offset');
+      }
+      document.body.classList.toggle('teleprompter-active', isPlaying);
+      if (host._updateScrollRegionHeight) host._updateScrollRegionHeight();
       writeStoredState(isPlaying);
     }
 
@@ -498,6 +520,18 @@
 
     document.body.classList.add('has-song-scroll-region');
     this._scrollRegion = wrapper;
+    var manualScrollTimer = 0;
+    var pointerScrolling = false;
+
+    function showManualScrollbar() {
+      if (!document.body.classList.contains('teleprompter-active')) return;
+      document.body.classList.add('teleprompter-manual-scroll');
+      if (manualScrollTimer) window.clearTimeout(manualScrollTimer);
+      manualScrollTimer = window.setTimeout(function () {
+        document.body.classList.remove('teleprompter-manual-scroll');
+        manualScrollTimer = 0;
+      }, 700);
+    }
 
     function updateHeight() {
       var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
@@ -508,6 +542,34 @@
 
     this._updateScrollRegionHeight = updateHeight;
     window.addEventListener('resize', updateHeight);
+    wrapper.addEventListener('wheel', showManualScrollbar, { passive: true });
+    wrapper.addEventListener('touchstart', showManualScrollbar, { passive: true });
+    wrapper.addEventListener('touchmove', showManualScrollbar, { passive: true });
+    wrapper.addEventListener('pointerdown', function () {
+      pointerScrolling = true;
+    });
+    window.addEventListener('pointerup', function () {
+      pointerScrolling = false;
+    });
+    window.addEventListener('pointercancel', function () {
+      pointerScrolling = false;
+    });
+    wrapper.addEventListener('scroll', function () {
+      if (pointerScrolling) showManualScrollbar();
+    }, { passive: true });
+    document.addEventListener('keydown', function (event) {
+      if (
+        event.key === 'ArrowDown' ||
+        event.key === 'ArrowUp' ||
+        event.key === 'PageDown' ||
+        event.key === 'PageUp' ||
+        event.key === 'Home' ||
+        event.key === 'End' ||
+        event.key === ' '
+      ) {
+        showManualScrollbar();
+      }
+    });
     updateHeight();
   };
 
