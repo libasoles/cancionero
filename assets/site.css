@@ -81,6 +81,28 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
 
 .lead { color: var(--ink-soft); font-size: 1.05rem; }
 
+.source-link {
+  margin: 1rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.source-link a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.source-link a:hover,
+.source-link a:focus-visible {
+  color: var(--accent);
+  border-bottom-color: currentColor;
+}
+
+@media print { .source-link { display: none; } }
+
 /* ----- Índice de canciones ----- */
 
 .toc { list-style: none; padding: 0; margin: 1.5rem 0; }

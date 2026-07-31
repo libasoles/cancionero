@@ -29,6 +29,8 @@ chat, seguí este flujo.
 4. Al terminar cada canción, hacé un commit. Si resulta más eficiente, podés
    agrupar varios temas terminados en una misma tanda de commits, pero no
    dejes canciones terminadas sin commitear.
+5. Si la canción sale de una fuente concreta, agregá al pie de la página un
+   link discreto para visitar esa fuente.
 
 ## Contrato de markup de `<song-sheet>`
 
@@ -45,6 +47,8 @@ Documentado en la cabecera de `assets/song-sheet.js`. Resumen:
   </p>
 </div>
 </song-sheet>
+
+<p class="source-link"><a href="{url-fuente}">Ver fuente</a></p>
 ```
 
 - Un `.estrofa` por estrofa/sección.
