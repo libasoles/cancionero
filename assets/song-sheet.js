@@ -63,12 +63,7 @@
     '  font-size: 1.35rem;',
     '  line-height: 3.1;',
     '  white-space: normal;',
-    '  background: #fff;',
-    '  border: 1px solid var(--rule, #d8d2c4);',
-    '  border-left: 3px solid var(--accent, #8b0000);',
-    '  border-radius: 4px;',
-    '  padding: 1rem 1.2rem;',
-    '  margin: 0.9rem 0 1.3rem;',
+    '  margin: 0.55rem 0 1.1rem;',
     '}',
     '.letra .estrofa { margin: 0 0 1.2rem; }',
     '.letra .estrofa:last-child { margin-bottom: 0; }',
@@ -80,7 +75,7 @@
     '  letter-spacing: 0.08em;',
     '  color: var(--ink-soft, #555);',
     '  line-height: 1.6;',
-    '  margin: 0 0 2rem;',
+    '  margin: 0 0 1.35rem;',
     '}',
     '/* .sobre: envoltorio que ancla y subraya la sílaba donde cae el acorde. */',
     '.letra .sobre {',
@@ -222,7 +217,9 @@
       root.appendChild(this.firstChild);
     }
 
+    this._root = root;
     this._markChordOnlySpans(root);
+    this._preventChordOverlap(root);
     this._mountTranspose(root);
     this._mountChordToggle();
   };
@@ -232,6 +229,33 @@
     for (var i = 0; i < spans.length; i++) {
       var text = spans[i].textContent.replace(/\u00a0/g, ' ').trim();
       if (!text) spans[i].dataset.chordOnly = 'true';
+    }
+  };
+
+  // Regla general anti-solape: el acorde (.c) flota con position:absolute
+  // sobre su .sobre, as\u00ed que su ancho real NO empuja al contenido siguiente.
+  // Si el nombre del acorde es m\u00e1s ancho que la s\u00edlaba (o el hueco) que lo
+  // sostiene \u2014t\u00edpicamente acordes de dos+ caracteres sobre una sola letra, o
+  // varios acordes seguidos sin letra debajo, como en una introducci\u00f3n\u2014
+  // termina superpuesto con el pr\u00f3ximo acorde o palabra. En vez de contar
+  // &nbsp; a mano por canci\u00f3n (fr\u00e1gil: cualquier acorde nuevo puede volver a
+  // romperlo), medimos el ancho real de cada acorde contra su .sobre despu\u00e9s
+  // de cada render y agregamos el margin-right que haga falta para separarlos.
+  // Corre en el mount inicial y cada vez que la transposici\u00f3n cambia el
+  // texto de los acordes (un acorde transpuesto puede ser m\u00e1s ancho, ej. "A"
+  // -> "A#").
+  SongSheet.prototype._preventChordOverlap = function (root) {
+    var GAP = 4;
+    var sobres = (root || this._root).querySelectorAll('.letra .sobre');
+    for (var i = 0; i < sobres.length; i++) {
+      var sobre = sobres[i];
+      var chord = sobre.querySelector('.c');
+      if (!chord) continue;
+      sobre.style.marginRight = '';
+      var overflow = chord.offsetWidth - sobre.offsetWidth;
+      if (overflow > 0) {
+        sobre.style.marginRight = (overflow + GAP) + 'px';
+      }
     }
   };
 
@@ -271,6 +295,7 @@
 
     var current = widget.querySelector('.t-current');
     var semitones = 0;
+    var host = this;
 
     function render() {
       for (var i = 0; i < chords.length; i++) {
@@ -278,6 +303,10 @@
       }
       var keyName = originalKey ? transposeKeyName(originalKey, semitones, useFlats) : null;
       current.textContent = keyName || (semitones === 0 ? '0' : (semitones > 0 ? '+' + semitones : String(semitones)));
+      current.classList.toggle('is-transposed', semitones !== 0);
+      // Un acorde transpuesto puede cambiar de ancho (ej. "A" -> "A#"), así
+      // que hay que recalcular la regla anti-solape en cada transposición.
+      host._preventChordOverlap(root);
     }
 
     widget.querySelector('.t-down').addEventListener('click', function () {
@@ -332,10 +361,16 @@
         host.removeAttribute('data-chords-hidden');
         toggle.setAttribute('aria-pressed', 'true');
         toggle.setAttribute('aria-label', 'Ocultar acordes');
+        // Los acordes vuelven a mostrarse: recalcular la separación anti-solape.
+        host._preventChordOverlap(host._root);
       } else {
         host.setAttribute('data-chords-hidden', 'true');
         toggle.setAttribute('aria-pressed', 'false');
         toggle.setAttribute('aria-label', 'Mostrar acordes');
+        // Con los acordes ocultos el margin-right sólo agregaría espacio
+        // extra entre palabras sin motivo visible: lo limpiamos.
+        var sobres = host._root.querySelectorAll('.letra .sobre');
+        for (var i = 0; i < sobres.length; i++) sobres[i].style.marginRight = '';
       }
     });
   };

@@ -21,13 +21,16 @@ body {
   color: var(--ink);
   background: var(--paper);
   max-width: var(--max-width);
-  margin: 3rem auto 6rem;
+  margin: 1.15rem auto 6rem;
   padding: 0 1.5rem;
   line-height: 1.55;
   font-size: 19px;
 }
 
-a { color: var(--accent); }
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
 
 /* ----- Header / logo ----- */
 
@@ -36,8 +39,8 @@ a { color: var(--accent); }
   align-items: center;
   justify-content: space-between;
   gap: 0.7rem;
-  padding-bottom: 1.2rem;
-  margin-bottom: 1.6rem;
+  padding-bottom: 0.85rem;
+  margin-bottom: 1.15rem;
   border-bottom: 1px solid var(--rule);
 }
 .site-header a.brand {
@@ -114,7 +117,9 @@ a { color: var(--accent); }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--accent);
 }
+.site-header .transpose .t-current.is-transposed { color: var(--accent-strong, var(--accent)); }
 .site-header .transpose button:hover,
 .site-header .transpose button:focus-visible {
   color: var(--accent);
@@ -143,6 +148,8 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
 
 .song-titlebar h1 {
   margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .chord-toggle {
@@ -154,17 +161,18 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
   cursor: pointer;
   border-radius: 999px;
   padding: 0;
-  flex: none;
-  width: 3rem;
-  height: 3rem;
+  flex: 0 0 2.7rem;
+  width: 2.7rem;
+  height: 2.7rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .chord-toggle svg {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.55rem;
+  height: 1.55rem;
+  stroke-width: 1.65;
 }
 
 .chord-toggle:hover,
@@ -207,28 +215,21 @@ h2 { font-size: 1.4rem; margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--
 .toc li {
   border-bottom: 1px solid var(--rule);
   padding: 1rem 0;
-  display: grid;
-  grid-template-columns: 2.4rem 1fr;
-  gap: 0.4rem 0.9rem;
-  align-items: baseline;
-}
-.toc .num {
-  font-family: var(--mono);
-  font-size: 0.95rem;
-  color: var(--ink-soft);
+  display: block;
 }
 .toc .title { font-size: 1.2rem; font-weight: 600; }
 .toc .title a { border-bottom: none; }
-.toc .desc { grid-column: 2; color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+.toc .desc { color: var(--ink-soft); font-size: 0.95rem; margin: 0.2rem 0 0; }
 
 @media (max-width: 640px) {
-  .song-titlebar {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.6rem;
+  body {
+    margin-top: 0.8rem;
+    padding: 0 1rem;
   }
 
-  .chord-toggle {
-    align-self: flex-start;
+  .song-titlebar {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 0.5rem;
   }
 }

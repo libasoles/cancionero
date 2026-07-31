@@ -27,7 +27,9 @@ chat, seguí este flujo.
    Priorizá economizar espacio vertical: el título y el subtítulo (`.lead`)
    deben quedar bien juntos y, en general, la página debe aprovechar la mayor
    cantidad de contenido posible dentro de la pantalla sin agregar aire
-   innecesario.
+   innecesario. La letra no debe ir dentro de una "tarjeta" o contenedor
+   visual con borde/fondo/padding extra: el bloque debe respirar directo sobre
+   la página para ahorrar espacio horizontal.
 3. Agregá o actualizá la entrada correspondiente en `index.html` dentro del
    `<ol class="toc">`, siguiendo el mismo patrón que las entradas existentes.
    Si la canción ya está completa, no agregues una descripción redundante
@@ -99,8 +101,9 @@ ambos.
 
 Después, agregá la entrada correspondiente en `index.html` dentro del
 `<ol class="toc">`, siguiendo el mismo patrón que las entradas existentes
-(número correlativo, título con link, y una descripción breve solo si hace
-falta aclarar algo no obvio, como un pendiente).
+(sin números visibles; solo título con link y una descripción breve si hace
+falta aclarar algo no obvio, como un pendiente). Los links del sitio deben
+verse sin subrayado.
 
 ## Corrección de este documento
 
