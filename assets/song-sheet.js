@@ -64,7 +64,7 @@
     '   aire arriba de cada línea. */',
     '.letra {',
     '  font-family: var(--serif, Georgia, "Times New Roman", serif);',
-    '  font-size: 1.35rem;',
+    '  font-size: var(--song-text-size, 1.35rem);',
     '  line-height: 3.1;',
     '  white-space: normal;',
     '  margin: 0.55rem 0 1.1rem;',
@@ -87,6 +87,7 @@
     '  display: inline-block;',
     '  line-height: 1.15;',
     '  vertical-align: baseline;',
+    '  cursor: pointer;',
     '  text-decoration: underline;',
     '  text-decoration-thickness: 1px;',
     '  text-underline-offset: 3px;',
@@ -228,6 +229,7 @@
     this._mountChordToggle();
     this._mountScrollRegion();
     this._mountTeleprompter();
+    this._mountTextSize();
   };
 
   SongSheet.prototype._markChordOnlySpans = function (root) {
@@ -510,6 +512,146 @@
 
     if (readStoredState()) start();
     else render();
+  };
+
+  SongSheet.prototype._mountTextSize = function () {
+    var bar = document.querySelector('.song-titlebar');
+    if (!bar) return;
+    var host = this;
+
+    var controls = bar.querySelector('.song-controls');
+    if (!controls) return;
+    if (controls.querySelector('.text-size-toggle')) return;
+
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'text-size-toggle';
+    toggle.setAttribute('aria-haspopup', 'dialog');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Cambiar tamaño del texto');
+    toggle.title = 'Cambiar tamaño del texto';
+    toggle.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      '<path d="M12 4v16"></path>' +
+      '<path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"></path>' +
+      '<path d="M9 20h6"></path>' +
+      '</svg>';
+    controls.appendChild(toggle);
+
+    var panel = document.createElement('div');
+    panel.className = 'text-size-panel';
+    panel.hidden = true;
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'Tamaño del texto');
+    panel.innerHTML =
+      '<div class="text-size-panel__label">Tamaño del texto</div>' +
+      '<div class="text-size-panel__controls">' +
+        '<button type="button" class="text-size-down" aria-label="Achicar texto">−</button>' +
+        '<button type="button" class="text-size-current" aria-label="Restablecer tamaño original" title="Restablecer tamaño original">100%</button>' +
+        '<button type="button" class="text-size-up" aria-label="Agrandar texto">+</button>' +
+      '</div>';
+    bar.appendChild(panel);
+
+    var current = panel.querySelector('.text-size-current');
+    var storageKey = 'song-sheet:text-size:' + window.location.pathname;
+    var currentScale = 1;
+    var minScale = 0.8;
+    var maxScale = 1.45;
+    var step = 0.05;
+
+    function clampScale(value) {
+      return Math.min(maxScale, Math.max(minScale, Math.round(value * 100) / 100));
+    }
+
+    function pulseButton(button) {
+      button.classList.remove('is-pulsing');
+      void button.offsetWidth;
+      button.classList.add('is-pulsing');
+    }
+
+    function readStoredScale() {
+      try {
+        var raw = window.localStorage.getItem(storageKey);
+        if (raw == null) return 1;
+        var parsed = parseFloat(raw);
+        return isNaN(parsed) ? 1 : clampScale(parsed);
+      } catch (err) {
+        return 1;
+      }
+    }
+
+    function writeStoredScale(value) {
+      try {
+        if (value === 1) {
+          window.localStorage.removeItem(storageKey);
+        } else {
+          window.localStorage.setItem(storageKey, String(value));
+        }
+      } catch (err) {}
+    }
+
+    function render() {
+      current.textContent = Math.round(currentScale * 100) + '%';
+      current.classList.toggle('is-modified', currentScale !== 1);
+      panel.querySelector('.text-size-down').disabled = currentScale <= minScale;
+      panel.querySelector('.text-size-up').disabled = currentScale >= maxScale;
+      host.style.setProperty('--song-text-size', (1.35 * currentScale) + 'rem');
+      writeStoredScale(currentScale);
+      if (host._preventChordOverlap) host._preventChordOverlap();
+    }
+
+    function openPanel() {
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closePanel() {
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    toggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      if (panel.hidden) openPanel();
+      else closePanel();
+      pulseButton(toggle);
+    });
+
+    panel.addEventListener('click', function (event) {
+      event.stopPropagation();
+    });
+
+    panel.querySelector('.text-size-down').addEventListener('click', function () {
+      currentScale = clampScale(currentScale - step);
+      render();
+    });
+
+    panel.querySelector('.text-size-up').addEventListener('click', function () {
+      currentScale = clampScale(currentScale + step);
+      render();
+    });
+
+    current.addEventListener('click', function () {
+      currentScale = 1;
+      render();
+    });
+
+    document.addEventListener('click', function (event) {
+      if (panel.hidden) return;
+      if (controls.contains(event.target)) return;
+      closePanel();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !panel.hidden) closePanel();
+    });
+
+    toggle.addEventListener('animationend', function (event) {
+      if (event.animationName === 'toggle-pulse') toggle.classList.remove('is-pulsing');
+    });
+
+    currentScale = readStoredScale();
+    render();
   };
 
   SongSheet.prototype._mountScrollRegion = function () {
