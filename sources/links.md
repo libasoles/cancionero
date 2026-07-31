@@ -9,3 +9,4 @@
 - https://www.cifraclub.com/atahualpa-yupanqui/viene-clareando/
 - https://www.cifraclub.com/mercedes-sosa/la-media-pena/
 - https://www.cifraclub.com/raul-carnota/por-seguir/
+- https://www.cifraclub.com/chaqueno-palavecino/chacarera-del-olvido/
