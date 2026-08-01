@@ -38,7 +38,7 @@
      una slice posterior. */
 
 (function () {
-  'use strict';
+  "use strict";
 
   // CSS del cancionero, migrado desde assets/lesson.css (sección "Letra estilo
   // cancionero"). Tematizado con var(--token, fallback): hereda los tokens de
@@ -46,112 +46,149 @@
   // a los fallbacks. Incluye el átomo .c (color de acorde) porque acá los .c
   // viven dentro del shadow root y no los alcanza la regla global.
   var STYLES = [
-    ':host { display: block; }',
-    '*, *::before, *::after { box-sizing: border-box; }',
-    '',
-    '/* Átomo de acorde: color + peso. Los nombres de acordes van siempre en sans. */',
-    '.c {',
-    '  color: var(--accent, #8b0000);',
+    ":host { display: block; }",
+    "*, *::before, *::after { box-sizing: border-box; }",
+    "",
+    "/* Átomo de acorde: color + peso. Los nombres de acordes van siempre en sans. */",
+    ".c {",
+    "  color: var(--accent, #8b0000);",
     '  font-family: var(--sans, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif);',
-    '  font-weight: 700;',
-    '  cursor: pointer;',
-    '}',
-    '.c:hover, .c:focus-visible {',
-    '  text-decoration: underline;',
-    '}',
-    '',
-    '/* Bloque de letra: sólo aporta el interlineado para que el acorde tenga',
-    '   aire arriba de cada línea. */',
-    '.letra {',
+    "  font-weight: 500;",
+    "  cursor: pointer;",
+    "}",
+    ".c:hover, .c:focus-visible {",
+    "  text-decoration: underline;",
+    "}",
+    "",
+    "/* Bloque de letra: sólo aporta el interlineado para que el acorde tenga",
+    "   aire arriba de cada línea. */",
+    ".letra {",
     '  font-family: var(--serif, Georgia, "Times New Roman", serif);',
-    '  font-size: var(--song-text-size, 1.35rem);',
-    '  line-height: 3.1;',
-    '  white-space: normal;',
-    '  margin: 0.55rem 0 1.1rem;',
-    '}',
-    '.letra .estrofa { margin: 0 0 1.2rem; }',
-    '.letra .estrofa:last-child { margin-bottom: 0; }',
-    '.letra .seccion {',
-    '  display: block;',
+    "  font-size: var(--song-text-size, 1.35rem);",
+    "  line-height: 3.1;",
+    "  white-space: normal;",
+    "  display: flex;",
+    "  flex-direction: column;",
+    "  gap: 1.2rem;",
+    "  margin: 0.55rem 0 1.1rem;",
+    "}",
+    ".letra .estrofa { margin: 0; }",
+    ".letra .seccion {",
+    "  display: block;",
     '  font-family: var(--sans, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif);',
-    '  font-size: 0.7rem;',
-    '  text-transform: uppercase;',
-    '  letter-spacing: 0.08em;',
-    '  color: var(--ink-soft, #555);',
-    '  line-height: 1.6;',
-    '  margin: 0 0 1.35rem;',
-    '}',
-    '/* .sobre: envoltorio que ancla y subraya la sílaba donde cae el acorde. */',
-    '.letra .sobre {',
-    '  position: relative;',
-    '  display: inline-block;',
-    '  line-height: 1.15;',
-    '  vertical-align: baseline;',
-    '  cursor: pointer;',
-    '  text-decoration: underline;',
-    '  text-decoration-thickness: 1px;',
-    '  text-underline-offset: 3px;',
-    '}',
-    '/* El acorde se imprime justo encima del arranque de la sílaba (left:0). */',
-    '.letra .sobre .c {',
-    '  position: absolute;',
-    '  left: 0;',
-    '  bottom: 100%;',
-    '  text-decoration: none;',
-    '  font-size: 0.72em;',
-    '  line-height: 1;',
-    '  white-space: nowrap;',
-    '  letter-spacing: 0.01em;',
-    '}',
+    "  font-size: 0.7rem;",
+    "  text-transform: uppercase;",
+    "  letter-spacing: 0.08em;",
+    "  color: var(--ink-soft, #555);",
+    "  line-height: 1.6;",
+    "  margin: 0 0 1rem;",
+    "}",
+    "/* .sobre: envoltorio que ancla y subraya la sílaba donde cae el acorde. */",
+    ".letra .sobre {",
+    "  position: relative;",
+    "  display: inline-block;",
+    "  line-height: 1.15;",
+    "  vertical-align: baseline;",
+    "  cursor: pointer;",
+    "  text-decoration: underline;",
+    "  text-decoration-thickness: 1px;",
+    "  text-underline-offset: 3px;",
+    "}",
+    "/* El acorde se imprime justo encima del arranque de la sílaba (left:0). */",
+    ".letra .sobre .c {",
+    "  position: absolute;",
+    "  left: 0;",
+    "  bottom: 100%;",
+    "  text-decoration: none;",
+    "  font-size: 0.88em;",
+    "  line-height: 1;",
+    "  white-space: nowrap;",
+    "  letter-spacing: 0.01em;",
+    "}",
     ':host([data-chords-hidden="true"]) .letra {',
-    '  line-height: 1.7;',
-    '}',
+    "  line-height: 1.7;",
+    "}",
     ':host([data-chords-hidden="true"]) .letra .seccion {',
-    '  margin-bottom: 0.9rem;',
-    '}',
+    "  margin-bottom: 0.9rem;",
+    "}",
     ':host([data-chords-hidden="true"]) .letra .sobre {',
-    '  display: inline;',
-    '  text-decoration: none;',
-    '}',
+    "  display: inline;",
+    "  text-decoration: none;",
+    "}",
     ':host([data-chords-hidden="true"]) .letra .sobre .c {',
-    '  display: none;',
-    '}',
+    "  display: none;",
+    "}",
     ':host([data-chords-hidden="true"]) .letra .sobre[data-chord-only="true"] {',
-    '  display: none;',
-    '}',
-    '',
-    '/* ----- Impresión ----- */',
-    '/* El cancionero se imprime como en pantalla; sólo neutralizamos el fondo',
-    '   para no gastar tinta y forzamos color exacto en el borde de acento. */',
-    '@media print {',
-    '  .letra {',
-    '    background: transparent;',
-    '    -webkit-print-color-adjust: exact;',
-    '    print-color-adjust: exact;',
-    '  }',
-    '}',
-  ].join('\n');
+    "  display: none;",
+    "}",
+    "",
+    "/* ----- Impresión ----- */",
+    "/* El cancionero se imprime como en pantalla; sólo neutralizamos el fondo",
+    "   para no gastar tinta y forzamos color exacto en el borde de acento. */",
+    "@media print {",
+    "  .letra {",
+    "    background: transparent;",
+    "    -webkit-print-color-adjust: exact;",
+    "    print-color-adjust: exact;",
+    "  }",
+    "}",
+  ].join("\n");
 
   // ----- Transposición de acordes -----
   // Notas con sostenidos y con bemoles; se elige una de las dos grafías según
   // lo que ya use la canción (si el cifrado original trae bemoles, se
   // transpone en bemoles; si no, en sostenidos), para no cambiarle el "acento"
   // a una tonalidad que el usuario ya reconoce (ej. Bb en vez de A#).
-  var SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-  var FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+  var SHARP_NAMES = [
+    "C",
+    "C#",
+    "D",
+    "D#",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "G#",
+    "A",
+    "A#",
+    "B",
+  ];
+  var FLAT_NAMES = [
+    "C",
+    "Db",
+    "D",
+    "Eb",
+    "E",
+    "F",
+    "Gb",
+    "G",
+    "Ab",
+    "A",
+    "Bb",
+    "B",
+  ];
   var NOTE_INDEX = {
-    C: 0, 'B#': 0,
-    'C#': 1, Db: 1,
+    C: 0,
+    "B#": 0,
+    "C#": 1,
+    Db: 1,
     D: 2,
-    'D#': 3, Eb: 3,
-    E: 4, Fb: 4,
-    F: 5, 'E#': 5,
-    'F#': 6, Gb: 6,
+    "D#": 3,
+    Eb: 3,
+    E: 4,
+    Fb: 4,
+    F: 5,
+    "E#": 5,
+    "F#": 6,
+    Gb: 6,
     G: 7,
-    'G#': 8, Ab: 8,
+    "G#": 8,
+    Ab: 8,
     A: 9,
-    'A#': 10, Bb: 10,
-    B: 11, Cb: 11
+    "A#": 10,
+    Bb: 10,
+    B: 11,
+    Cb: 11,
   };
   var ROOT_RE = /^([A-G])([#b]?)/;
 
@@ -164,7 +201,7 @@
     var idx = NOTE_INDEX[root];
     if (idx === undefined) return part;
     var suffix = part.slice(m[0].length);
-    var newIdx = ((idx + semitones) % 12 + 12) % 12;
+    var newIdx = (((idx + semitones) % 12) + 12) % 12;
     var names = useFlats ? FLAT_NAMES : SHARP_NAMES;
     return names[newIdx] + suffix;
   }
@@ -172,32 +209,77 @@
   // Un acorde puede traer bajo ("G/B"): se transponen ambos lados por
   // separado porque cada uno es una nota independiente.
   function transposeChord(text, semitones, useFlats) {
-    return text.split('/').map(function (part) {
-      return transposePart(part, semitones, useFlats);
-    }).join('/');
+    return text
+      .split("/")
+      .map(function (part) {
+        return transposePart(part, semitones, useFlats);
+      })
+      .join("/");
   }
 
   // La tonalidad (data-key="Re menor") se anota en solfeo español, distinto
   // de las letras (C, D, E...) que usan los .c. Se transpone por separado y
   // se muestra en el widget: el usuario reconoce "Mi menor", no un desplazo
   // en semitonos.
-  var SHARP_NAMES_ES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
-  var FLAT_NAMES_ES = ['Do', 'Reb', 'Re', 'Mib', 'Mi', 'Fa', 'Solb', 'Sol', 'Lab', 'La', 'Sib', 'Si'];
+  var SHARP_NAMES_ES = [
+    "Do",
+    "Do#",
+    "Re",
+    "Re#",
+    "Mi",
+    "Fa",
+    "Fa#",
+    "Sol",
+    "Sol#",
+    "La",
+    "La#",
+    "Si",
+  ];
+  var FLAT_NAMES_ES = [
+    "Do",
+    "Reb",
+    "Re",
+    "Mib",
+    "Mi",
+    "Fa",
+    "Solb",
+    "Sol",
+    "Lab",
+    "La",
+    "Sib",
+    "Si",
+  ];
   var NOTE_INDEX_ES = {
-    Do: 0, 'Do#': 1, Reb: 1, Re: 2, 'Re#': 3, Mib: 3, Mi: 4, Fa: 5,
-    'Fa#': 6, Solb: 6, Sol: 7, 'Sol#': 8, Lab: 8, La: 9, 'La#': 10, Sib: 10, Si: 11
+    Do: 0,
+    "Do#": 1,
+    Reb: 1,
+    Re: 2,
+    "Re#": 3,
+    Mib: 3,
+    Mi: 4,
+    Fa: 5,
+    "Fa#": 6,
+    Solb: 6,
+    Sol: 7,
+    "Sol#": 8,
+    Lab: 8,
+    La: 9,
+    "La#": 10,
+    Sib: 10,
+    Si: 11,
   };
   var KEY_RE = /^(Do|Re|Mi|Fa|Sol|La|Si)(#|b)?\s+(mayor|menor)$/i;
 
   function transposeKeyName(keyText, semitones, useFlats) {
     var m = KEY_RE.exec(keyText.trim());
     if (!m) return null;
-    var root = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase() + (m[2] || '');
+    var root =
+      m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase() + (m[2] || "");
     var idx = NOTE_INDEX_ES[root];
     if (idx === undefined) return null;
-    var newIdx = ((idx + semitones) % 12 + 12) % 12;
+    var newIdx = (((idx + semitones) % 12) + 12) % 12;
     var names = useFlats ? FLAT_NAMES_ES : SHARP_NAMES_ES;
-    return names[newIdx] + ' ' + m[3].toLowerCase();
+    return names[newIdx] + " " + m[3].toLowerCase();
   }
 
   class SongSheet extends HTMLElement {}
@@ -206,11 +288,11 @@
     if (this._mounted) return;
     this._mounted = true;
 
-    if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
+    if (!this.shadowRoot) this.attachShadow({ mode: "open" });
     var root = this.shadowRoot;
 
     // Inyectamos el CSS encapsulado.
-    var style = document.createElement('style');
+    var style = document.createElement("style");
     style.textContent = STYLES;
     root.appendChild(style);
 
@@ -233,10 +315,10 @@
   };
 
   SongSheet.prototype._markChordOnlySpans = function (root) {
-    var spans = root.querySelectorAll('.sobre');
+    var spans = root.querySelectorAll(".sobre");
     for (var i = 0; i < spans.length; i++) {
-      var text = spans[i].textContent.replace(/\u00a0/g, ' ').trim();
-      if (!text) spans[i].dataset.chordOnly = 'true';
+      var text = spans[i].textContent.replace(/\u00a0/g, " ").trim();
+      if (!text) spans[i].dataset.chordOnly = "true";
     }
   };
 
@@ -254,15 +336,15 @@
   // -> "A#").
   SongSheet.prototype._preventChordOverlap = function (root) {
     var GAP = 4;
-    var sobres = (root || this._root).querySelectorAll('.letra .sobre');
+    var sobres = (root || this._root).querySelectorAll(".letra .sobre");
     for (var i = 0; i < sobres.length; i++) {
       var sobre = sobres[i];
-      var chord = sobre.querySelector('.c');
+      var chord = sobre.querySelector(".c");
       if (!chord) continue;
-      sobre.style.marginRight = '';
+      sobre.style.marginRight = "";
       var overflow = chord.offsetWidth - sobre.offsetWidth;
       if (overflow > 0) {
-        sobre.style.marginRight = (overflow + GAP) + 'px';
+        sobre.style.marginRight = overflow + GAP + "px";
       }
     }
   };
@@ -276,35 +358,36 @@
   // (ej. "Mi menor"); si no hay data-key (página vieja o valor no parseable)
   // cae a mostrar el desplazo en semitonos, para no dejar el widget vacío.
   SongSheet.prototype._mountTranspose = function (root) {
-    var chords = root.querySelectorAll('.c');
-    var header = document.querySelector('.site-header');
-    if (!chords.length || !header || header.querySelector('.transpose')) return;
+    var chords = root.querySelectorAll(".c");
+    var header = document.querySelector(".site-header");
+    if (!chords.length || !header || header.querySelector(".transpose")) return;
 
     var useFlats = false;
     var hasSharp = false;
     for (var i = 0; i < chords.length; i++) {
       var text = chords[i].textContent;
       chords[i].dataset.original = text;
-      if (text.indexOf('b') !== -1 && ROOT_RE.test(text)) useFlats = true;
-      if (text.indexOf('#') !== -1) hasSharp = true;
+      if (text.indexOf("b") !== -1 && ROOT_RE.test(text)) useFlats = true;
+      if (text.indexOf("#") !== -1) hasSharp = true;
     }
     if (hasSharp) useFlats = false;
 
-    var originalKey = this.dataset.key || '';
+    var originalKey = this.dataset.key || "";
 
-    var widget = document.createElement('div');
-    widget.className = 'transpose';
+    var widget = document.createElement("div");
+    widget.className = "transpose";
     widget.innerHTML =
       '<button type="button" class="t-down" aria-label="Bajar medio tono">−</button>' +
       '<button type="button" class="t-current" aria-label="Restablecer tono original" title="Restablecer tono original">' +
-        (originalKey || '0') + '</button>' +
+      (originalKey || "0") +
+      "</button>" +
       '<button type="button" class="t-up" aria-label="Subir medio tono">+</button>';
     header.appendChild(widget);
 
-    var current = widget.querySelector('.t-current');
+    var current = widget.querySelector(".t-current");
     var semitones = 0;
     var host = this;
-    var storageKey = 'song-sheet:transpose:' + window.location.pathname;
+    var storageKey = "song-sheet:transpose:" + window.location.pathname;
 
     function readStoredSemitones() {
       try {
@@ -329,26 +412,38 @@
 
     function render() {
       for (var i = 0; i < chords.length; i++) {
-        chords[i].textContent = transposeChord(chords[i].dataset.original, semitones, useFlats);
+        chords[i].textContent = transposeChord(
+          chords[i].dataset.original,
+          semitones,
+          useFlats,
+        );
       }
-      var keyName = originalKey ? transposeKeyName(originalKey, semitones, useFlats) : null;
-      current.textContent = keyName || (semitones === 0 ? '0' : (semitones > 0 ? '+' + semitones : String(semitones)));
-      current.classList.toggle('is-transposed', semitones !== 0);
+      var keyName = originalKey
+        ? transposeKeyName(originalKey, semitones, useFlats)
+        : null;
+      current.textContent =
+        keyName ||
+        (semitones === 0
+          ? "0"
+          : semitones > 0
+            ? "+" + semitones
+            : String(semitones));
+      current.classList.toggle("is-transposed", semitones !== 0);
       writeStoredSemitones(semitones);
       // Un acorde transpuesto puede cambiar de ancho (ej. "A" -> "A#"), así
       // que hay que recalcular la regla anti-solape en cada transposición.
       host._preventChordOverlap(root);
     }
 
-    widget.querySelector('.t-down').addEventListener('click', function () {
+    widget.querySelector(".t-down").addEventListener("click", function () {
       semitones -= 1;
       render();
     });
-    widget.querySelector('.t-up').addEventListener('click', function () {
+    widget.querySelector(".t-up").addEventListener("click", function () {
       semitones += 1;
       render();
     });
-    current.addEventListener('click', function () {
+    current.addEventListener("click", function () {
       semitones = 0;
       render();
     });
@@ -358,28 +453,28 @@
   };
 
   SongSheet.prototype._mountTeleprompter = function () {
-    var bar = document.querySelector('.song-titlebar');
+    var bar = document.querySelector(".song-titlebar");
     if (!bar) return;
     var host = this;
 
-    var controls = bar.querySelector('.song-controls');
+    var controls = bar.querySelector(".song-controls");
     if (!controls) {
-      controls = document.createElement('div');
-      controls.className = 'song-controls';
+      controls = document.createElement("div");
+      controls.className = "song-controls";
       bar.appendChild(controls);
     }
 
-    var chordToggle = bar.querySelector('.chord-toggle');
+    var chordToggle = bar.querySelector(".chord-toggle");
     if (chordToggle && chordToggle.parentNode !== controls) {
       controls.appendChild(chordToggle);
     }
 
-    if (controls.querySelector('.teleprompter-toggle')) return;
+    if (controls.querySelector(".teleprompter-toggle")) return;
 
-    var toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'teleprompter-toggle';
-    toggle.setAttribute('aria-pressed', 'false');
+    var toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "teleprompter-toggle";
+    toggle.setAttribute("aria-pressed", "false");
     controls.appendChild(toggle);
 
     var playIcon =
@@ -387,7 +482,7 @@
       '<path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"/>' +
       '<path d="M7 21h10"/>' +
       '<rect width="20" height="14" x="2" y="3" rx="2"/>' +
-      '</svg>';
+      "</svg>";
     var pauseIcon =
       '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
       '<path d="M10 13V7"/>' +
@@ -395,22 +490,22 @@
       '<rect width="20" height="14" x="2" y="3" rx="2"/>' +
       '<path d="M12 17v4"/>' +
       '<path d="M8 21h8"/>' +
-      '</svg>';
+      "</svg>";
 
-    var storageKey = 'song-sheet:teleprompter:' + window.location.pathname;
+    var storageKey = "song-sheet:teleprompter:" + window.location.pathname;
     var isPlaying = false;
     var timerId = 0;
     var speed = 0.45;
 
     function pulseButton(button) {
-      button.classList.remove('is-pulsing');
+      button.classList.remove("is-pulsing");
       void button.offsetWidth;
-      button.classList.add('is-pulsing');
+      button.classList.add("is-pulsing");
     }
 
     function readStoredState() {
       try {
-        return window.localStorage.getItem(storageKey) === 'true';
+        return window.localStorage.getItem(storageKey) === "true";
       } catch (err) {
         return false;
       }
@@ -419,7 +514,7 @@
     function writeStoredState(value) {
       try {
         if (value) {
-          window.localStorage.setItem(storageKey, 'true');
+          window.localStorage.setItem(storageKey, "true");
         } else {
           window.localStorage.removeItem(storageKey);
         }
@@ -428,30 +523,48 @@
 
     function syncFloatingPosition() {
       var rect = toggle.getBoundingClientRect();
-      document.body.style.setProperty('--teleprompter-float-top', rect.top + 'px');
-      document.body.style.setProperty('--teleprompter-float-left', rect.left + 'px');
-      document.body.style.setProperty('--teleprompter-float-width', rect.width + 'px');
-      document.body.style.setProperty('--teleprompter-float-height', rect.height + 'px');
+      document.body.style.setProperty(
+        "--teleprompter-float-top",
+        rect.top + "px",
+      );
+      document.body.style.setProperty(
+        "--teleprompter-float-left",
+        rect.left + "px",
+      );
+      document.body.style.setProperty(
+        "--teleprompter-float-width",
+        rect.width + "px",
+      );
+      document.body.style.setProperty(
+        "--teleprompter-float-height",
+        rect.height + "px",
+      );
     }
 
     function syncTeleprompterOverlayOffset() {
       var scroller = host._scrollRegion;
       if (!scroller) return;
-      document.body.style.setProperty('--teleprompter-overlay-offset', scroller.getBoundingClientRect().top + 'px');
+      document.body.style.setProperty(
+        "--teleprompter-overlay-offset",
+        scroller.getBoundingClientRect().top + "px",
+      );
     }
 
     function render() {
       toggle.innerHTML = isPlaying ? pauseIcon : playIcon;
-      toggle.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
-      toggle.setAttribute('aria-label', isPlaying ? 'Pausar teleprompter' : 'Activar teleprompter');
-      toggle.title = isPlaying ? 'Pausar teleprompter' : 'Activar teleprompter';
+      toggle.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+      toggle.setAttribute(
+        "aria-label",
+        isPlaying ? "Pausar teleprompter" : "Activar teleprompter",
+      );
+      toggle.title = isPlaying ? "Pausar teleprompter" : "Activar teleprompter";
       if (isPlaying) {
         syncFloatingPosition();
         syncTeleprompterOverlayOffset();
       } else {
-        document.body.style.removeProperty('--teleprompter-overlay-offset');
+        document.body.style.removeProperty("--teleprompter-overlay-offset");
       }
-      document.body.classList.toggle('teleprompter-active', isPlaying);
+      document.body.classList.toggle("teleprompter-active", isPlaying);
       if (host._updateScrollRegionHeight) host._updateScrollRegionHeight();
       writeStoredState(isPlaying);
       pulseButton(toggle);
@@ -473,7 +586,10 @@
         return;
       }
 
-      var maxScroll = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+      var maxScroll = Math.max(
+        0,
+        scroller.scrollHeight - scroller.clientHeight,
+      );
       if (scroller.scrollTop >= maxScroll - 1) {
         stop();
         return;
@@ -490,7 +606,7 @@
       timerId = window.setInterval(step, 16);
     }
 
-    toggle.addEventListener('click', function () {
+    toggle.addEventListener("click", function () {
       if (isPlaying) {
         stop();
       } else {
@@ -498,15 +614,16 @@
       }
     });
 
-    toggle.addEventListener('animationend', function (event) {
-      if (event.animationName === 'toggle-pulse') toggle.classList.remove('is-pulsing');
+    toggle.addEventListener("animationend", function (event) {
+      if (event.animationName === "toggle-pulse")
+        toggle.classList.remove("is-pulsing");
     });
 
-    document.addEventListener('visibilitychange', function () {
+    document.addEventListener("visibilitychange", function () {
       if (document.hidden && isPlaying) stop();
     });
 
-    window.addEventListener('beforeunload', function () {
+    window.addEventListener("beforeunload", function () {
       if (timerId) window.clearInterval(timerId);
     });
 
@@ -515,58 +632,61 @@
   };
 
   SongSheet.prototype._mountTextSize = function () {
-    var bar = document.querySelector('.song-titlebar');
+    var bar = document.querySelector(".song-titlebar");
     if (!bar) return;
     var host = this;
 
-    var controls = bar.querySelector('.song-controls');
+    var controls = bar.querySelector(".song-controls");
     if (!controls) return;
-    if (controls.querySelector('.text-size-toggle')) return;
+    if (controls.querySelector(".text-size-toggle")) return;
 
-    var toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'text-size-toggle';
-    toggle.setAttribute('aria-haspopup', 'dialog');
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Cambiar tamaño del texto');
-    toggle.title = 'Cambiar tamaño del texto';
+    var toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "text-size-toggle";
+    toggle.setAttribute("aria-haspopup", "dialog");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Cambiar tamaño del texto");
+    toggle.title = "Cambiar tamaño del texto";
     toggle.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
       '<path d="M12 4v16"></path>' +
       '<path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"></path>' +
       '<path d="M9 20h6"></path>' +
-      '</svg>';
+      "</svg>";
     controls.appendChild(toggle);
 
-    var panel = document.createElement('div');
-    panel.className = 'text-size-panel';
+    var panel = document.createElement("div");
+    panel.className = "text-size-panel";
     panel.hidden = true;
-    panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-label', 'Tamaño del texto');
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-label", "Tamaño del texto");
     panel.innerHTML =
       '<div class="text-size-panel__label">Tamaño del texto</div>' +
       '<div class="text-size-panel__controls">' +
-        '<button type="button" class="text-size-down" aria-label="Achicar texto">−</button>' +
-        '<button type="button" class="text-size-current" aria-label="Restablecer tamaño original" title="Restablecer tamaño original">100%</button>' +
-        '<button type="button" class="text-size-up" aria-label="Agrandar texto">+</button>' +
-      '</div>';
+      '<button type="button" class="text-size-down" aria-label="Achicar texto">−</button>' +
+      '<button type="button" class="text-size-current" aria-label="Restablecer tamaño original" title="Restablecer tamaño original">100%</button>' +
+      '<button type="button" class="text-size-up" aria-label="Agrandar texto">+</button>' +
+      "</div>";
     bar.appendChild(panel);
 
-    var current = panel.querySelector('.text-size-current');
-    var storageKey = 'song-sheet:text-size:' + window.location.pathname;
+    var current = panel.querySelector(".text-size-current");
+    var storageKey = "song-sheet:text-size:" + window.location.pathname;
     var currentScale = 1;
     var minScale = 0.8;
     var maxScale = 1.45;
     var step = 0.05;
 
     function clampScale(value) {
-      return Math.min(maxScale, Math.max(minScale, Math.round(value * 100) / 100));
+      return Math.min(
+        maxScale,
+        Math.max(minScale, Math.round(value * 100) / 100),
+      );
     }
 
     function pulseButton(button) {
-      button.classList.remove('is-pulsing');
+      button.classList.remove("is-pulsing");
       void button.offsetWidth;
-      button.classList.add('is-pulsing');
+      button.classList.add("is-pulsing");
     }
 
     function readStoredScale() {
@@ -591,63 +711,67 @@
     }
 
     function render() {
-      current.textContent = Math.round(currentScale * 100) + '%';
-      current.classList.toggle('is-modified', currentScale !== 1);
-      panel.querySelector('.text-size-down').disabled = currentScale <= minScale;
-      panel.querySelector('.text-size-up').disabled = currentScale >= maxScale;
-      host.style.setProperty('--song-text-size', (1.35 * currentScale) + 'rem');
+      current.textContent = Math.round(currentScale * 100) + "%";
+      current.classList.toggle("is-modified", currentScale !== 1);
+      panel.querySelector(".text-size-down").disabled =
+        currentScale <= minScale;
+      panel.querySelector(".text-size-up").disabled = currentScale >= maxScale;
+      host.style.setProperty("--song-text-size", 1.35 * currentScale + "rem");
       writeStoredScale(currentScale);
       if (host._preventChordOverlap) host._preventChordOverlap();
     }
 
     function openPanel() {
       panel.hidden = false;
-      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute("aria-expanded", "true");
     }
 
     function closePanel() {
       panel.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute("aria-expanded", "false");
     }
 
-    toggle.addEventListener('click', function (event) {
+    toggle.addEventListener("click", function (event) {
       event.stopPropagation();
       if (panel.hidden) openPanel();
       else closePanel();
       pulseButton(toggle);
     });
 
-    panel.addEventListener('click', function (event) {
+    panel.addEventListener("click", function (event) {
       event.stopPropagation();
     });
 
-    panel.querySelector('.text-size-down').addEventListener('click', function () {
-      currentScale = clampScale(currentScale - step);
-      render();
-    });
+    panel
+      .querySelector(".text-size-down")
+      .addEventListener("click", function () {
+        currentScale = clampScale(currentScale - step);
+        render();
+      });
 
-    panel.querySelector('.text-size-up').addEventListener('click', function () {
+    panel.querySelector(".text-size-up").addEventListener("click", function () {
       currentScale = clampScale(currentScale + step);
       render();
     });
 
-    current.addEventListener('click', function () {
+    current.addEventListener("click", function () {
       currentScale = 1;
       render();
     });
 
-    document.addEventListener('click', function (event) {
+    document.addEventListener("click", function (event) {
       if (panel.hidden) return;
       if (controls.contains(event.target)) return;
       closePanel();
     });
 
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && !panel.hidden) closePanel();
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !panel.hidden) closePanel();
     });
 
-    toggle.addEventListener('animationend', function (event) {
-      if (event.animationName === 'toggle-pulse') toggle.classList.remove('is-pulsing');
+    toggle.addEventListener("animationend", function (event) {
+      if (event.animationName === "toggle-pulse")
+        toggle.classList.remove("is-pulsing");
     });
 
     currentScale = readStoredScale();
@@ -657,8 +781,8 @@
   SongSheet.prototype._mountScrollRegion = function () {
     if (this._scrollRegion) return;
 
-    var wrapper = document.createElement('div');
-    wrapper.className = 'song-scroll-region';
+    var wrapper = document.createElement("div");
+    wrapper.className = "song-scroll-region";
 
     var parent = this.parentNode;
     if (!parent) return;
@@ -667,58 +791,67 @@
     wrapper.appendChild(this);
 
     var next = wrapper.nextElementSibling;
-    if (next && next.classList && next.classList.contains('source-link')) {
+    if (next && next.classList && next.classList.contains("source-link")) {
       wrapper.appendChild(next);
     }
 
-    document.body.classList.add('has-song-scroll-region');
+    document.body.classList.add("has-song-scroll-region");
     this._scrollRegion = wrapper;
     var manualScrollTimer = 0;
     var pointerScrolling = false;
 
     function showManualScrollbar() {
-      if (!document.body.classList.contains('teleprompter-active')) return;
-      document.body.classList.add('teleprompter-manual-scroll');
+      if (!document.body.classList.contains("teleprompter-active")) return;
+      document.body.classList.add("teleprompter-manual-scroll");
       if (manualScrollTimer) window.clearTimeout(manualScrollTimer);
       manualScrollTimer = window.setTimeout(function () {
-        document.body.classList.remove('teleprompter-manual-scroll');
+        document.body.classList.remove("teleprompter-manual-scroll");
         manualScrollTimer = 0;
       }, 700);
     }
 
     function updateHeight() {
-      var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      var viewportHeight =
+        window.innerHeight || document.documentElement.clientHeight || 0;
       var top = wrapper.getBoundingClientRect().top;
       var height = Math.max(180, viewportHeight - top - 16);
-      wrapper.style.height = height + 'px';
+      wrapper.style.height = height + "px";
     }
 
     this._updateScrollRegionHeight = updateHeight;
-    window.addEventListener('resize', updateHeight);
-    wrapper.addEventListener('wheel', showManualScrollbar, { passive: true });
-    wrapper.addEventListener('touchstart', showManualScrollbar, { passive: true });
-    wrapper.addEventListener('touchmove', showManualScrollbar, { passive: true });
-    wrapper.addEventListener('pointerdown', function () {
+    window.addEventListener("resize", updateHeight);
+    wrapper.addEventListener("wheel", showManualScrollbar, { passive: true });
+    wrapper.addEventListener("touchstart", showManualScrollbar, {
+      passive: true,
+    });
+    wrapper.addEventListener("touchmove", showManualScrollbar, {
+      passive: true,
+    });
+    wrapper.addEventListener("pointerdown", function () {
       pointerScrolling = true;
     });
-    window.addEventListener('pointerup', function () {
+    window.addEventListener("pointerup", function () {
       pointerScrolling = false;
     });
-    window.addEventListener('pointercancel', function () {
+    window.addEventListener("pointercancel", function () {
       pointerScrolling = false;
     });
-    wrapper.addEventListener('scroll', function () {
-      if (pointerScrolling) showManualScrollbar();
-    }, { passive: true });
-    document.addEventListener('keydown', function (event) {
+    wrapper.addEventListener(
+      "scroll",
+      function () {
+        if (pointerScrolling) showManualScrollbar();
+      },
+      { passive: true },
+    );
+    document.addEventListener("keydown", function (event) {
       if (
-        event.key === 'ArrowDown' ||
-        event.key === 'ArrowUp' ||
-        event.key === 'PageDown' ||
-        event.key === 'PageUp' ||
-        event.key === 'Home' ||
-        event.key === 'End' ||
-        event.key === ' '
+        event.key === "ArrowDown" ||
+        event.key === "ArrowUp" ||
+        event.key === "PageDown" ||
+        event.key === "PageUp" ||
+        event.key === "Home" ||
+        event.key === "End" ||
+        event.key === " "
       ) {
         showManualScrollbar();
       }
@@ -727,71 +860,79 @@
   };
 
   SongSheet.prototype._mountChordToggle = function () {
-    var title = document.querySelector('h1');
+    var title = document.querySelector("h1");
     if (!title) return;
 
-    var bar = title.parentNode && title.parentNode.classList && title.parentNode.classList.contains('song-titlebar')
-      ? title.parentNode
-      : null;
+    var bar =
+      title.parentNode &&
+      title.parentNode.classList &&
+      title.parentNode.classList.contains("song-titlebar")
+        ? title.parentNode
+        : null;
 
     if (!bar) {
-      bar = document.createElement('div');
-      bar.className = 'song-titlebar';
+      bar = document.createElement("div");
+      bar.className = "song-titlebar";
       title.parentNode.insertBefore(bar, title);
       bar.appendChild(title);
     }
 
-    if (bar.querySelector('.chord-toggle')) return;
+    if (bar.querySelector(".chord-toggle")) return;
 
-    var toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'chord-toggle';
-    toggle.setAttribute('aria-pressed', 'true');
-    toggle.setAttribute('aria-label', 'Ocultar acordes');
+    var toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "chord-toggle";
+    toggle.setAttribute("aria-pressed", "true");
+    toggle.setAttribute("aria-label", "Ocultar acordes");
     toggle.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
       '<path d="m11.9 12.1 4.514-4.514"></path>' +
       '<path d="M20.1 2.3a1 1 0 0 0-1.4 0l-1.114 1.114A2 2 0 0 0 17 4.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 17.828 7h1.344a2 2 0 0 0 1.414-.586L21.7 5.3a1 1 0 0 0 0-1.4z"></path>' +
       '<path d="m6 16 2 2"></path>' +
       '<path d="M8.23 9.85A3 3 0 0 1 11 8a5 5 0 0 1 5 5 3 3 0 0 1-1.85 2.77l-.92.38A2 2 0 0 0 12 18a4 4 0 0 1-4 4 6 6 0 0 1-6-6 4 4 0 0 1 4-4 2 2 0 0 0 1.85-1.23z"></path>' +
-      '</svg>';
+      "</svg>";
     bar.appendChild(toggle);
 
     var host = this;
 
     function pulseButton(button) {
-      button.classList.remove('is-pulsing');
+      button.classList.remove("is-pulsing");
       void button.offsetWidth;
-      button.classList.add('is-pulsing');
+      button.classList.add("is-pulsing");
     }
 
-    toggle.addEventListener('click', function () {
-      var hidden = host.getAttribute('data-chords-hidden') === 'true';
+    toggle.addEventListener("click", function () {
+      var hidden = host.getAttribute("data-chords-hidden") === "true";
       if (hidden) {
-        host.removeAttribute('data-chords-hidden');
-        toggle.setAttribute('aria-pressed', 'true');
-        toggle.setAttribute('aria-label', 'Ocultar acordes');
+        host.removeAttribute("data-chords-hidden");
+        toggle.setAttribute("aria-pressed", "true");
+        toggle.setAttribute("aria-label", "Ocultar acordes");
         // Los acordes vuelven a mostrarse: recalcular la separación anti-solape.
         host._preventChordOverlap(host._root);
       } else {
-        host.setAttribute('data-chords-hidden', 'true');
-        toggle.setAttribute('aria-pressed', 'false');
-        toggle.setAttribute('aria-label', 'Mostrar acordes');
+        host.setAttribute("data-chords-hidden", "true");
+        toggle.setAttribute("aria-pressed", "false");
+        toggle.setAttribute("aria-label", "Mostrar acordes");
         // Con los acordes ocultos el margin-right sólo agregaría espacio
         // extra entre palabras sin motivo visible: lo limpiamos.
-        var sobres = host._root.querySelectorAll('.letra .sobre');
-        for (var i = 0; i < sobres.length; i++) sobres[i].style.marginRight = '';
+        var sobres = host._root.querySelectorAll(".letra .sobre");
+        for (var i = 0; i < sobres.length; i++)
+          sobres[i].style.marginRight = "";
       }
       pulseButton(toggle);
     });
 
-    toggle.addEventListener('animationend', function (event) {
-      if (event.animationName === 'toggle-pulse') toggle.classList.remove('is-pulsing');
+    toggle.addEventListener("animationend", function (event) {
+      if (event.animationName === "toggle-pulse")
+        toggle.classList.remove("is-pulsing");
     });
   };
 
   // Registro. Idempotente por si el script se carga dos veces.
-  if (typeof customElements !== 'undefined' && !customElements.get('song-sheet')) {
-    customElements.define('song-sheet', SongSheet);
+  if (
+    typeof customElements !== "undefined" &&
+    !customElements.get("song-sheet")
+  ) {
+    customElements.define("song-sheet", SongSheet);
   }
 })();

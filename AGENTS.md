@@ -29,7 +29,9 @@ chat, seguí este flujo.
    cantidad de contenido posible dentro de la pantalla sin agregar aire
    innecesario. La letra no debe ir dentro de una "tarjeta" o contenedor
    visual con borde/fondo/padding extra: el bloque debe respirar directo sobre
-   la página para ahorrar espacio horizontal.
+   la página para ahorrar espacio horizontal. Como regla de layout, preferí
+   `flex`/`grid` con `gap` antes que espaciar siblings con `margin`: el
+   contenedor define la separación, no cada elemento según quién lo rodea.
 3. Agregá o actualizá la entrada correspondiente en `index.html` dentro del
    `<ol class="toc">`, siguiendo el mismo patrón que las entradas existentes.
    Si la canción ya está completa, no agregues una descripción redundante

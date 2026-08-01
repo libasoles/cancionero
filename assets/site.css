@@ -193,7 +193,7 @@ h2 {
 .song-controls {
   position: absolute;
   top: 0;
-  right: -0.35rem;
+  right: -0.5rem;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -709,7 +709,7 @@ body.teleprompter-active.teleprompter-manual-scroll
   }
 
   .song-controls {
-    right: -0.15rem;
+    right: -0.6rem;
   }
 
   .text-size-panel {
