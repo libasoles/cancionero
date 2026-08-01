@@ -61,12 +61,21 @@
   // svguitar dibuja cada dedo en su traste ABSOLUTO dentro de la ventana de
   // `frets` trastes; en formas subidas (position > 1) hay que restar el
   // offset para que los dedos entren en la ventana visible.
+  // Nuestra base usa 'o' para cuerda al aire, pero svguitar reconoce OPEN = 0.
+  function normalizeFingerValue(value) {
+    return value === 'o' || value === 'O' || value === '0' ? window.svguitar.OPEN : value;
+  }
+
   function toWindowFrets(chord) {
     var offset = (chord.position || 1) - 1;
-    if (offset === 0) return { fingers: chord.fingers, barres: chord.barres || [] };
     var fingers = chord.fingers.map(function (finger) {
-      return typeof finger[1] === 'number' ? [finger[0], finger[1] - offset, finger[2]] : finger.slice();
+      var normalizedValue = normalizeFingerValue(finger[1]);
+      if (typeof normalizedValue === 'number' && normalizedValue !== window.svguitar.OPEN) {
+        return [finger[0], normalizedValue - offset, finger[2]];
+      }
+      return [finger[0], normalizedValue, finger[2]];
     });
+    if (offset === 0) return { fingers: fingers, barres: chord.barres || [] };
     var barres = (chord.barres || []).map(function (barre) {
       return { fromString: barre.fromString, toString: barre.toString, fret: barre.fret - offset };
     });

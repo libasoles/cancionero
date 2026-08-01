@@ -21,7 +21,8 @@
       "Bash(git commit -m ' *)",
       "Bash(python3 render.py sources/como-arbolito-en-otono-pre.txt)",
       "Bash(python3 render.py sources/igual-que-pajaro-herido-pre.txt)",
-      "Bash(python3 render.py sources/para-los-ojos-mas-bellos-pre.txt)"
+      "Bash(python3 render.py sources/para-los-ojos-mas-bellos-pre.txt)",
+      "Bash(node shot.js)"
     ],
     "additionalDirectories": [
       "/private/tmp"
