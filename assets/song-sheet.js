@@ -495,6 +495,15 @@
     toggle.setAttribute("aria-pressed", "false");
     slot.appendChild(toggle);
 
+    var speedControl = document.createElement("label");
+    speedControl.className = "teleprompter-speed";
+    speedControl.hidden = true;
+    speedControl.setAttribute("aria-label", "Velocidad del teleprompter");
+    speedControl.innerHTML =
+      '<span class="teleprompter-speed__rail" aria-hidden="true"></span>' +
+      '<input class="teleprompter-speed__input" type="range" min="0.15" max="1.6" step="0.05" value="0.45" aria-label="Velocidad del teleprompter">';
+    slot.appendChild(speedControl);
+
     var playIcon =
       '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
       '<path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"/>' +
@@ -511,9 +520,15 @@
       "</svg>";
 
     var storageKey = "song-sheet:teleprompter:" + window.location.pathname;
+    var speedStorageKey =
+      "song-sheet:teleprompter-speed:" + window.location.pathname;
     var isPlaying = false;
     var timerId = 0;
-    var speed = 0.45;
+    var speedInput = speedControl.querySelector(".teleprompter-speed__input");
+    var defaultSpeed = 0.45;
+    var minSpeed = 0.15;
+    var maxSpeed = 1.8;
+    var speed = defaultSpeed;
 
     function pulseButton(button) {
       button.classList.remove("is-pulsing");
@@ -535,6 +550,34 @@
           window.localStorage.setItem(storageKey, "true");
         } else {
           window.localStorage.removeItem(storageKey);
+        }
+      } catch (err) {}
+    }
+
+    function clampSpeed(value) {
+      return Math.min(
+        maxSpeed,
+        Math.max(minSpeed, Math.round(value * 100) / 100),
+      );
+    }
+
+    function readStoredSpeed() {
+      try {
+        var raw = window.localStorage.getItem(speedStorageKey);
+        if (raw == null) return defaultSpeed;
+        var parsed = parseFloat(raw);
+        return isNaN(parsed) ? defaultSpeed : clampSpeed(parsed);
+      } catch (err) {
+        return defaultSpeed;
+      }
+    }
+
+    function writeStoredSpeed(value) {
+      try {
+        if (value === defaultSpeed) {
+          window.localStorage.removeItem(speedStorageKey);
+        } else {
+          window.localStorage.setItem(speedStorageKey, String(value));
         }
       } catch (err) {}
     }
@@ -576,6 +619,8 @@
         isPlaying ? "Pausar teleprompter" : "Activar teleprompter",
       );
       toggle.title = isPlaying ? "Pausar teleprompter" : "Activar teleprompter";
+      speedInput.value = String(speed);
+      speedControl.hidden = !isPlaying;
       if (isPlaying) {
         syncFloatingPosition();
         syncTeleprompterOverlayOffset();
@@ -632,6 +677,11 @@
       }
     });
 
+    speedInput.addEventListener("input", function () {
+      speed = clampSpeed(parseFloat(speedInput.value) || defaultSpeed);
+      writeStoredSpeed(speed);
+    });
+
     toggle.addEventListener("animationend", function (event) {
       if (event.animationName === "toggle-pulse")
         toggle.classList.remove("is-pulsing");
@@ -645,6 +695,7 @@
       if (timerId) window.clearInterval(timerId);
     });
 
+    speed = readStoredSpeed();
     if (readStoredState()) start();
     else render();
   };
