@@ -187,6 +187,7 @@ h2 {
 
 .song-titlebar h1 {
   margin: 0;
+  font-size: 1.5em;
 }
 
 .song-controls {
@@ -220,8 +221,8 @@ h2 {
 }
 
 .chord-toggle svg {
-  width: 1.55rem;
-  height: 1.55rem;
+  width: 1.75rem;
+  height: 1.75rem;
   stroke-width: 1.65;
 }
 
@@ -301,8 +302,8 @@ h2 {
 }
 
 .text-size-toggle svg {
-  width: 1.45rem;
-  height: 1.45rem;
+  width: 1.4rem;
+  height: 1.4rem;
   stroke-width: 1.8;
 }
 
@@ -386,7 +387,7 @@ h2 {
 .text-size-current {
   flex: 1 1 auto;
   height: 1.85rem;
-  border-radius: 6px;
+  border: none;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -611,8 +612,7 @@ body.teleprompter-active.teleprompter-manual-scroll
   display: block;
 }
 .toc .title {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1rem;
 }
 .toc .title a {
   border-bottom: none;
