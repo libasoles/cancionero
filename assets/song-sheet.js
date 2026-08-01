@@ -501,7 +501,7 @@
     speedControl.setAttribute("aria-label", "Velocidad del teleprompter");
     speedControl.innerHTML =
       '<span class="teleprompter-speed__rail" aria-hidden="true"></span>' +
-      '<input class="teleprompter-speed__input" type="range" min="0.15" max="1.6" step="0.05" value="0.45" aria-label="Velocidad del teleprompter">';
+      '<input class="teleprompter-speed__input" type="range" min="0" max="1.6" step="0.05" value="0.45" aria-label="Velocidad del teleprompter">';
     slot.appendChild(speedControl);
 
     var playIcon =
@@ -526,8 +526,8 @@
     var timerId = 0;
     var speedInput = speedControl.querySelector(".teleprompter-speed__input");
     var defaultSpeed = 0.45;
-    var minSpeed = 0.15;
-    var maxSpeed = 1.8;
+    var minSpeed = 0;
+    var maxSpeed = 1.6;
     var speed = defaultSpeed;
 
     function pulseButton(button) {
@@ -620,6 +620,7 @@
       );
       toggle.title = isPlaying ? "Pausar teleprompter" : "Activar teleprompter";
       speedInput.value = String(speed);
+      speedControl.classList.toggle("is-zero", speed === 0);
       speedControl.hidden = !isPlaying;
       if (isPlaying) {
         syncFloatingPosition();
@@ -678,7 +679,9 @@
     });
 
     speedInput.addEventListener("input", function () {
-      speed = clampSpeed(parseFloat(speedInput.value) || defaultSpeed);
+      var nextSpeed = parseFloat(speedInput.value);
+      speed = clampSpeed(isNaN(nextSpeed) ? defaultSpeed : nextSpeed);
+      speedControl.classList.toggle("is-zero", speed === 0);
       writeStoredSpeed(speed);
     });
 

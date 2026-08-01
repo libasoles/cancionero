@@ -388,8 +388,7 @@ h2 {
   border: none;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 0 0 0 1px
-    color-mix(in srgb, var(--paper) 92%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 92%, transparent);
 }
 
 .teleprompter-speed__input::-moz-range-track {
@@ -406,8 +405,7 @@ h2 {
   border: none;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 0 0 0 1px
-    color-mix(in srgb, var(--paper) 92%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 92%, transparent);
 }
 
 .teleprompter-speed__input::-moz-range-progress {
@@ -795,7 +793,7 @@ body.teleprompter-active.teleprompter-manual-scroll
 .toc {
   list-style: none;
   padding: 0;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
 }
 .toc li {
   border-bottom: 1px solid var(--rule);
