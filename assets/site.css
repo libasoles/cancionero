@@ -210,8 +210,35 @@ h2 {
   width: auto;
   padding: 0.18rem 0.08rem;
   border-radius: 14px;
-  background: color-mix(in srgb, white 92%, var(--paper));
+  background: transparent;
+  isolation: isolate;
   z-index: 6;
+}
+
+.song-controls::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--paper) 5%, transparent);
+  backdrop-filter: blur(1.5px) saturate(0.95);
+  -webkit-backdrop-filter: blur(1.5px) saturate(0.95);
+  mask-image: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.8) 48%,
+    rgba(0, 0, 0, 0.35) 78%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.8) 48%,
+    rgba(0, 0, 0, 0.35) 78%,
+    transparent 100%
+  );
+  z-index: -1;
+  pointer-events: none;
 }
 
 .teleprompter-slot {
