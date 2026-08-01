@@ -46,8 +46,22 @@
   // a los fallbacks. Incluye el átomo .c (color de acorde) porque acá los .c
   // viven dentro del shadow root y no los alcanza la regla global.
   var STYLES = [
-    ":host { display: block; }",
+    ":host {",
+    "  display: block;",
+    "  animation: song-fade-in 480ms ease-out both 80ms;",
+    "}",
     "*, *::before, *::after { box-sizing: border-box; }",
+    "@keyframes song-fade-in {",
+    "  from {",
+    "    opacity: 0;",
+    "  }",
+    "  to {",
+    "    opacity: 1;",
+    "  }",
+    "}",
+    "@media (prefers-reduced-motion: reduce) {",
+    "  :host { animation: none; }",
+    "}",
     "",
     "/* Átomo de acorde: color + peso. Los nombres de acordes van siempre en sans. */",
     ".c {",
@@ -81,7 +95,7 @@
     "  letter-spacing: 0.08em;",
     "  color: var(--ink-soft, #555);",
     "  line-height: 1.6;",
-    "  margin: 0 0 1rem;",
+    "  margin: 0 0 0.3rem;",
     "}",
     "/* .sobre: envoltorio que ancla y subraya la sílaba donde cae el acorde. */",
     ".letra .sobre {",
@@ -471,11 +485,15 @@
 
     if (controls.querySelector(".teleprompter-toggle")) return;
 
+    var slot = document.createElement("div");
+    slot.className = "teleprompter-slot";
+    controls.appendChild(slot);
+
     var toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "teleprompter-toggle";
     toggle.setAttribute("aria-pressed", "false");
-    controls.appendChild(toggle);
+    slot.appendChild(toggle);
 
     var playIcon =
       '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
@@ -522,7 +540,7 @@
     }
 
     function syncFloatingPosition() {
-      var rect = toggle.getBoundingClientRect();
+      var rect = slot.getBoundingClientRect();
       document.body.style.setProperty(
         "--teleprompter-float-top",
         rect.top + "px",
@@ -667,7 +685,7 @@
       '<button type="button" class="text-size-current" aria-label="Restablecer tamaño original" title="Restablecer tamaño original">100%</button>' +
       '<button type="button" class="text-size-up" aria-label="Agrandar texto">+</button>' +
       "</div>";
-    bar.appendChild(panel);
+    controls.appendChild(panel);
 
     var current = panel.querySelector(".text-size-current");
     var storageKey = "song-sheet:text-size:" + window.location.pathname;
@@ -722,6 +740,7 @@
     }
 
     function openPanel() {
+      panel.style.top = toggle.offsetTop + toggle.offsetHeight - 30 + "px";
       panel.hidden = false;
       toggle.setAttribute("aria-expanded", "true");
     }
