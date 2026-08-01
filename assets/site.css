@@ -329,6 +329,13 @@ h2 {
   outline: none;
 }
 
+.teleprompter-toggle.is-zero,
+.teleprompter-toggle.is-zero:hover,
+.teleprompter-toggle.is-zero:focus-visible,
+.teleprompter-toggle.is-zero[aria-pressed="true"] {
+  color: #111;
+}
+
 .teleprompter-speed {
   position: relative;
   width: 0.8rem;
@@ -338,6 +345,10 @@ h2 {
   opacity: 0;
   transform: translateY(-0.25rem);
   animation: teleprompter-speed-fade-in 180ms ease forwards;
+}
+
+.teleprompter-speed.is-zero .teleprompter-speed__rail {
+  background: rgba(17, 17, 17, 0.4);
 }
 
 .teleprompter-speed__rail {
@@ -391,6 +402,10 @@ h2 {
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 92%, transparent);
 }
 
+.teleprompter-speed.is-zero .teleprompter-speed__input::-webkit-slider-thumb {
+  background: #111;
+}
+
 .teleprompter-speed__input::-moz-range-track {
   width: 100%;
   height: 0.12rem;
@@ -406,6 +421,10 @@ h2 {
   border-radius: 999px;
   background: var(--accent);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 92%, transparent);
+}
+
+.teleprompter-speed.is-zero .teleprompter-speed__input::-moz-range-thumb {
+  background: #111;
 }
 
 .teleprompter-speed__input::-moz-range-progress {
@@ -426,6 +445,10 @@ h2 {
   border: none;
   border-radius: 999px;
   background: var(--accent);
+}
+
+.teleprompter-speed.is-zero .teleprompter-speed__input::-ms-thumb {
+  background: #111;
 }
 
 .teleprompter-speed__input::-ms-fill-lower,

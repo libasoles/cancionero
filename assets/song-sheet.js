@@ -501,7 +501,7 @@
     speedControl.setAttribute("aria-label", "Velocidad del teleprompter");
     speedControl.innerHTML =
       '<span class="teleprompter-speed__rail" aria-hidden="true"></span>' +
-      '<input class="teleprompter-speed__input" type="range" min="0" max="1.6" step="0.05" value="0.45" aria-label="Velocidad del teleprompter">';
+      '<input class="teleprompter-speed__input" type="range" min="0" max="1.6" step="0.01" value="0.45" aria-label="Velocidad del teleprompter">';
     slot.appendChild(speedControl);
 
     var playIcon =
@@ -529,6 +529,7 @@
     var minSpeed = 0;
     var maxSpeed = 1.6;
     var speed = defaultSpeed;
+    var wakeLock = null;
 
     function pulseButton(button) {
       button.classList.remove("is-pulsing");
@@ -559,6 +560,43 @@
         maxSpeed,
         Math.max(minSpeed, Math.round(value * 100) / 100),
       );
+    }
+
+    function syncZeroState() {
+      var isZero = speed === 0;
+      slot.classList.toggle("is-zero", isZero);
+      toggle.classList.toggle("is-zero", isZero);
+      speedControl.classList.toggle("is-zero", isZero);
+    }
+
+    function vibrateAtZero() {
+      if (!("vibrate" in navigator)) return;
+      try {
+        navigator.vibrate(18);
+      } catch (err) {}
+    }
+
+    function releaseWakeLock() {
+      if (!wakeLock) return Promise.resolve();
+      var lock = wakeLock;
+      wakeLock = null;
+      return lock.release().catch(function () {});
+    }
+
+    function requestWakeLock() {
+      if (!isPlaying) return Promise.resolve();
+      if (!("wakeLock" in navigator) || !navigator.wakeLock) {
+        return Promise.resolve();
+      }
+      return navigator.wakeLock
+        .request("screen")
+        .then(function (lock) {
+          wakeLock = lock;
+          lock.addEventListener("release", function () {
+            if (wakeLock === lock) wakeLock = null;
+          });
+        })
+        .catch(function () {});
     }
 
     function readStoredSpeed() {
@@ -620,7 +658,7 @@
       );
       toggle.title = isPlaying ? "Pausar teleprompter" : "Activar teleprompter";
       speedInput.value = String(speed);
-      speedControl.classList.toggle("is-zero", speed === 0);
+      syncZeroState();
       speedControl.hidden = !isPlaying;
       if (isPlaying) {
         syncFloatingPosition();
@@ -640,6 +678,7 @@
         window.clearInterval(timerId);
         timerId = 0;
       }
+      releaseWakeLock();
       render();
     }
 
@@ -666,6 +705,7 @@
       if (isPlaying) return;
       isPlaying = true;
       render();
+      requestWakeLock();
       step();
       timerId = window.setInterval(step, 16);
     }
@@ -679,9 +719,11 @@
     });
 
     speedInput.addEventListener("input", function () {
+      var wasZero = speed === 0;
       var nextSpeed = parseFloat(speedInput.value);
       speed = clampSpeed(isNaN(nextSpeed) ? defaultSpeed : nextSpeed);
-      speedControl.classList.toggle("is-zero", speed === 0);
+      syncZeroState();
+      if (!wasZero && speed === 0) vibrateAtZero();
       writeStoredSpeed(speed);
     });
 
@@ -696,6 +738,7 @@
 
     window.addEventListener("beforeunload", function () {
       if (timerId) window.clearInterval(timerId);
+      releaseWakeLock();
     });
 
     speed = readStoredSpeed();
