@@ -501,7 +501,7 @@
     speedControl.setAttribute("aria-label", "Velocidad del teleprompter");
     speedControl.innerHTML =
       '<span class="teleprompter-speed__rail" aria-hidden="true"></span>' +
-      '<input class="teleprompter-speed__input" type="range" min="0" max="1.6" step="0.01" value="0.45" aria-label="Velocidad del teleprompter">';
+      '<input class="teleprompter-speed__input" type="range" min="0" max="1.6" step="0.005" value="0.45" aria-label="Velocidad del teleprompter">';
     slot.appendChild(speedControl);
 
     var playIcon =
@@ -525,9 +525,9 @@
     var isPlaying = false;
     var timerId = 0;
     var speedInput = speedControl.querySelector(".teleprompter-speed__input");
-    var defaultSpeed = 0.45;
+    var defaultSpeed = 0.4;
     var minSpeed = 0;
-    var maxSpeed = 1.6;
+    var maxSpeed = 1.5;
     var speed = defaultSpeed;
     var wakeLock = null;
 
