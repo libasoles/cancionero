@@ -182,8 +182,12 @@ h2 {
 .song-titlebar {
   position: relative;
   margin: 0 0 0.2rem;
-  min-height: 2.7rem;
   z-index: 7;
+}
+
+.song-heading {
+  min-width: 0;
+  padding-right: 2.8rem;
 }
 
 .song-titlebar h1 {
@@ -191,15 +195,22 @@ h2 {
   font-size: 1.5em;
 }
 
+.song-titlebar .lead {
+  margin: 0.1rem 0 0;
+}
+
 .song-controls {
   position: absolute;
   top: 0;
-  right: -0.5rem;
+  right: -0.18rem;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  width: 2.9rem;
+  width: auto;
+  padding: 0.18rem 0.08rem;
+  border-radius: 14px;
+  background: color-mix(in srgb, white 92%, var(--paper));
   z-index: 6;
 }
 
@@ -858,11 +869,11 @@ body.teleprompter-active.teleprompter-manual-scroll
   }
 
   .song-titlebar {
-    min-height: 2.5rem;
+    min-height: 0;
   }
 
   .song-controls {
-    right: -0.6rem;
+    right: -0.08rem;
   }
 
   .text-size-panel {

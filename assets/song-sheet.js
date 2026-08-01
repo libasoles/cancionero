@@ -932,6 +932,7 @@
   SongSheet.prototype._mountChordToggle = function () {
     var title = document.querySelector("h1");
     if (!title) return;
+    var lead = document.querySelector(".lead");
 
     var bar =
       title.parentNode &&
@@ -944,8 +945,17 @@
       bar = document.createElement("div");
       bar.className = "song-titlebar";
       title.parentNode.insertBefore(bar, title);
-      bar.appendChild(title);
     }
+
+    var copy = bar.querySelector(".song-heading");
+    if (!copy) {
+      copy = document.createElement("div");
+      copy.className = "song-heading";
+      bar.insertBefore(copy, bar.firstChild);
+    }
+
+    if (title.parentNode !== copy) copy.appendChild(title);
+    if (lead && lead.parentNode !== copy) copy.appendChild(lead);
 
     if (bar.querySelector(".chord-toggle")) return;
 

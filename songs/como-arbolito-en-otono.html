@@ -1,119 +1,172 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Como arbolito en otoño · Letras</title>
-  <link rel="stylesheet" href="../assets/site.css">
-  <script src="../assets/vendor/svguitar.umd.js" defer></script>
-  <script src="../assets/chords-db.js" defer></script>
-  <script src="../assets/chord-modal.js" defer></script>
-  <script src="../assets/song-sheet.js" defer></script>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Como arbolito en otoño · Letras</title>
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script src="../assets/vendor/svguitar.umd.js" defer></script>
+    <script src="../assets/chords-db.js" defer></script>
+    <script src="../assets/chord-modal.js" defer></script>
+    <script src="../assets/song-sheet.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../index.html" title="Volver al índice">
+        <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+          <rect class="frame" x="8" y="8" width="32" height="32" rx="3" />
+          <line class="string" x1="18" y1="8" x2="18" y2="40" />
+          <line class="string" x1="24" y1="8" x2="24" y2="40" />
+          <line class="string" x1="30" y1="8" x2="30" y2="40" />
+          <line class="string" x1="8" y1="20" x2="40" y2="20" />
+          <line class="string" x1="8" y1="30" x2="40" y2="30" />
+          <circle class="dot" cx="18" cy="25" r="3.2" />
+          <circle class="dot" cx="30" cy="15" r="3.2" />
+        </svg>
+        <span class="wordmark">Letras<small>cancionero</small></span>
+      </a>
+    </header>
 
-<header class="site-header">
-  <a class="brand" href="../index.html" title="Volver al índice">
-    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
-      <rect class="frame" x="8" y="8" width="32" height="32" rx="3"/>
-      <line class="string" x1="18" y1="8" x2="18" y2="40"/>
-      <line class="string" x1="24" y1="8" x2="24" y2="40"/>
-      <line class="string" x1="30" y1="8" x2="30" y2="40"/>
-      <line class="string" x1="8" y1="20" x2="40" y2="20"/>
-      <line class="string" x1="8" y1="30" x2="40" y2="30"/>
-      <circle class="dot" cx="18" cy="25" r="3.2"/>
-      <circle class="dot" cx="30" cy="15" r="3.2"/>
-    </svg>
-    <span class="wordmark">Letras<small>cancionero</small></span>
-  </a>
-</header>
+    <h1>Como arbolito en otoño</h1>
+    <p class="lead">Los Carabajal</p>
 
-<h1>Como arbolito en otoño</h1>
-<p class="lead">Los Carabajal</p>
-
-<!-- Fuente base: Cifra Club / los-carabajal/como-arbolito-en-otono.
+    <!-- Fuente base: Cifra Club / los-carabajal/como-arbolito-en-otono.
      Patrón de 4 versos por estrofa: V1 = A al inicio, V2 sin acorde
      (continúa el mismo A), V3 = B7 al inicio, V4 = A / B7 / E repartidos
      sobre la línea (no todos al final). Verificado carácter a carácter
      contra el cifrado fuente en Estrofa 1; la fuente no vuelve a
      transcribir las estrofas siguientes (dice "mismo patrón"), así que el
      resto usa la misma posición proporcional dentro de la línea. -->
-<song-sheet data-key="Mi mayor">
-<div class="letra">
-  <p class="estrofa">
-    <span class="seccion">Estrofa 1</span>
-    <span class="sobre"><span class="c">A</span>Como</span> arbolito de otoño<br>
-    sin hojas ya estoy quedando<br>
-    <span class="sobre"><span class="c">B7</span>las</span> flores que yo tenía<br>
-    de a poco te fui entreg<span class="sobre"><span class="c">A</span>ando</span><span class="sobre"><span class="c">B7</span>.</span><span class="sobre"><span class="c">E</span></span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Introducción</span>
-    <span class="sobre"><span class="c">E</span></span><span class="sobre"><span class="c">A</span></span><span class="sobre"><span class="c">B7</span></span><span class="sobre"><span class="c">E</span></span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Estrofa 2</span>
-    <span class="sobre"><span class="c">A</span>Quien</span> lo hubiera sospechado<br>
-    que en tu pecho se escondía<br>
-    <span class="sobre"><span class="c">B7</span>un</span> corazón de quebracho,<br>
-    de p<span class="sobre"><span class="c">A</span>iedra</span> más bi<span class="sobre"><span class="c">B7</span>en</span> dir<span class="sobre"><span class="c">E</span>ía.</span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Introducción</span>
-    <span class="sobre"><span class="c">E</span></span><span class="sobre"><span class="c">A</span></span><span class="sobre"><span class="c">B7</span></span><span class="sobre"><span class="c">E</span></span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Estrofa 3</span>
-    <span class="sobre"><span class="c">A</span>De</span> agua y sal mojé un pañuelo<br>
-    de amor la luna moría<br>
-    <span class="sobre"><span class="c">B7</span>de</span> agua y sal bañé mis ojos<br>
-    que <span class="sobre"><span class="c">A</span>nunca</span> más l<span class="sobre"><span class="c">B7</span>lorarí</span><span class="sobre"><span class="c">E</span>an.</span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Puente</span>
-    <span class="sobre"><span class="c">A</span>Una</span> lágrima he guardado<br>
-    <span class="sobre"><span class="c">F#m</span>una</span> gota de esperanza<br>
-    <span class="sobre"><span class="c">B7</span>para</span> ponerla en tu boca<br>
-    si r<span class="sobre"><span class="c">A</span>egresarás</span> <span class="sobre"><span class="c">B7</span>mañan</span><span class="sobre"><span class="c">E</span>a.</span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Introducción</span>
-    <span class="sobre"><span class="c">E</span></span><span class="sobre"><span class="c">A</span></span><span class="sobre"><span class="c">B7</span></span><span class="sobre"><span class="c">E</span></span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Estrofa 4</span>
-    <span class="sobre"><span class="c">A</span>Como</span> un campo con escarcha<br>
-    así me has dejado el alma<br>
-    <span class="sobre"><span class="c">B7</span>arenal</span> seco y sediento<br>
-    mi c<span class="sobre"><span class="c">A</span>orazón</span> se d<span class="sobre"><span class="c">B7</span>esangr</span><span class="sobre"><span class="c">E</span>a.</span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Introducción</span>
-    <span class="sobre"><span class="c">E</span></span><span class="sobre"><span class="c">A</span></span><span class="sobre"><span class="c">B7</span></span><span class="sobre"><span class="c">E</span></span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Estrofa 5</span>
-    <span class="sobre"><span class="c">A</span>Un</span> cuchillo me has clavado<br>
-    y es muy profunda la herida<br>
-    <span class="sobre"><span class="c">B7</span>pero</span> es tal mi mala suerte<br>
-    que <span class="sobre"><span class="c">A</span>me</span> dejaste <span class="sobre"><span class="c">B7</span>con</span> vi<span class="sobre"><span class="c">E</span>da.</span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Introducción</span>
-    <span class="sobre"><span class="c">E</span></span><span class="sobre"><span class="c">A</span></span><span class="sobre"><span class="c">B7</span></span><span class="sobre"><span class="c">E</span></span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Cierre</span>
-    <span class="sobre"><span class="c">A</span>Las</span> flores que yo tenía<br>
-    de a poco te fui entregando<br>
-    <span class="sobre"><span class="c">B7</span>como</span> arbolito en otoño<br>
-    sin h<span class="sobre"><span class="c">A</span>ojas</span> ya estoy <span class="sobre"><span class="c">B7</span>quedan</span><span class="sobre"><span class="c">E</span>do.</span><br>
-    <span class="sobre"><span class="c">A</span>Una</span> lágrima he guardado...
-  </p>
-</div>
-</song-sheet>
+    <song-sheet data-key="Mi mayor">
+      <div class="letra">
+        <p class="estrofa">
+          <span class="seccion">Estrofa 1</span>
+          <span class="sobre"><span class="c">A</span>Como</span> arbolito de
+          otoño<br />
+          sin hojas ya estoy quedando<br />
+          <span class="sobre"><span class="c">B7</span>las</span> flores que yo
+          tenía<br />
+          de a <span class="sobre"><span class="c">A</span>po</span>co te
+          <span class="sobre"><span class="c">B7</span>fui</span> entregan<span
+            class="sobre"
+            ><span class="c">E</span>do</span
+          >
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Introducción</span>
+          <span class="sobre"><span class="c">E</span></span
+          ><span class="sobre"><span class="c">A</span></span
+          ><span class="sobre"><span class="c">B7</span></span
+          ><span class="sobre"><span class="c">E</span></span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Estrofa 2</span>
+          <span class="sobre"><span class="c">A</span>Quien</span> lo hubiera
+          sospechado<br />
+          que en tu pecho se escondía<br />
+          <span class="sobre"><span class="c">B7</span>un</span> corazón de
+          quebracho,<br />
+          de p<span class="sobre"><span class="c">A</span>iedra</span> más
+          bi<span class="sobre"><span class="c">B7</span>en</span> dir<span
+            class="sobre"
+            ><span class="c">E</span>ía.</span
+          >
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Introducción</span>
+          <span class="sobre"><span class="c">E</span></span
+          ><span class="sobre"><span class="c">A</span></span
+          ><span class="sobre"><span class="c">B7</span></span
+          ><span class="sobre"><span class="c">E</span></span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Estrofa 3</span>
+          <span class="sobre"><span class="c">A</span>De</span> agua y sal mojé
+          un pañuelo<br />
+          de amor la luna moría<br />
+          <span class="sobre"><span class="c">B7</span>de</span> agua y sal bañé
+          mis ojos<br />
+          que <span class="sobre"><span class="c">A</span>nunca</span> más
+          l<span class="sobre"><span class="c">B7</span>lorarí</span
+          ><span class="sobre"><span class="c">E</span>an.</span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Puente</span>
+          <span class="sobre"><span class="c">A</span>Una</span> lágrima he
+          guardado<br />
+          <span class="sobre"><span class="c">F#m</span>una</span> gota de
+          esperanza<br />
+          <span class="sobre"><span class="c">B7</span>para</span> ponerla en tu
+          boca<br />
+          si r<span class="sobre"><span class="c">A</span>egresarás</span>
+          <span class="sobre"><span class="c">B7</span>mañan</span
+          ><span class="sobre"><span class="c">E</span>a.</span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Introducción</span>
+          <span class="sobre"><span class="c">E</span></span
+          ><span class="sobre"><span class="c">A</span></span
+          ><span class="sobre"><span class="c">B7</span></span
+          ><span class="sobre"><span class="c">E</span></span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Estrofa 4</span>
+          <span class="sobre"><span class="c">A</span>Como</span> un campo con
+          escarcha<br />
+          así me has dejado el alma<br />
+          <span class="sobre"><span class="c">B7</span>arenal</span> seco y
+          sediento<br />
+          mi c<span class="sobre"><span class="c">A</span>orazón</span> se
+          d<span class="sobre"><span class="c">B7</span>esangr</span
+          ><span class="sobre"><span class="c">E</span>a.</span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Introducción</span>
+          <span class="sobre"><span class="c">E</span></span
+          ><span class="sobre"><span class="c">A</span></span
+          ><span class="sobre"><span class="c">B7</span></span
+          ><span class="sobre"><span class="c">E</span></span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Estrofa 5</span>
+          <span class="sobre"><span class="c">A</span>Un</span> cuchillo me has
+          clavado<br />
+          y es muy profunda la herida<br />
+          <span class="sobre"><span class="c">B7</span>pero</span> es tal mi
+          mala suerte<br />
+          que <span class="sobre"><span class="c">A</span>me</span> dejaste
+          <span class="sobre"><span class="c">B7</span>con</span> vi<span
+            class="sobre"
+            ><span class="c">E</span>da.</span
+          >
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Introducción</span>
+          <span class="sobre"><span class="c">E</span></span
+          ><span class="sobre"><span class="c">A</span></span
+          ><span class="sobre"><span class="c">B7</span></span
+          ><span class="sobre"><span class="c">E</span></span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Cierre</span>
+          <span class="sobre"><span class="c">A</span>Las</span> flores que yo
+          tenía<br />
+          de a poco te fui entregando<br />
+          <span class="sobre"><span class="c">B7</span>como</span> arbolito en
+          otoño<br />
+          sin h<span class="sobre"><span class="c">A</span>ojas</span> ya estoy
+          <span class="sobre"><span class="c">B7</span>quedan</span
+          ><span class="sobre"><span class="c">E</span>do.</span><br />
+          <span class="sobre"><span class="c">A</span>Una</span> lágrima he
+          guardado...
+        </p>
+      </div>
+    </song-sheet>
 
-<p class="source-link"><a href="https://www.cifraclub.com/los-carabajal/como-arbolito-en-otono/">Ver fuente</a></p>
-
-</body>
+    <p class="source-link">
+      <a href="https://www.cifraclub.com/los-carabajal/como-arbolito-en-otono/"
+        >Ver fuente</a
+      >
+    </p>
+  </body>
 </html>
