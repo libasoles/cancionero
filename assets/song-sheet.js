@@ -530,6 +530,7 @@
     var maxSpeed = 1.5;
     var speed = defaultSpeed;
     var wakeLock = null;
+    var scrollPosition = 0;
 
     function pulseButton(button) {
       button.classList.remove("is-pulsing");
@@ -620,6 +621,13 @@
       } catch (err) {}
     }
 
+    function syncScrollPosition() {
+      var scroller = host._scrollRegion;
+      scrollPosition = scroller ? scroller.scrollTop : 0;
+    }
+
+    host._syncTeleprompterScrollPosition = syncScrollPosition;
+
     function syncFloatingPosition() {
       var rect = slot.getBoundingClientRect();
       document.body.style.setProperty(
@@ -698,12 +706,14 @@
         return;
       }
 
-      scroller.scrollTop = Math.min(maxScroll, scroller.scrollTop + speed);
+      scrollPosition = Math.min(maxScroll, scrollPosition + speed);
+      scroller.scrollTop = scrollPosition;
     }
 
     function start() {
       if (isPlaying) return;
       isPlaying = true;
+      syncScrollPosition();
       render();
       requestWakeLock();
       step();
@@ -955,6 +965,9 @@
     wrapper.addEventListener(
       "scroll",
       function () {
+        if (host._syncTeleprompterScrollPosition) {
+          host._syncTeleprompterScrollPosition();
+        }
         if (pointerScrolling) showManualScrollbar();
       },
       { passive: true },
