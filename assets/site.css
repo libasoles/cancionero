@@ -336,6 +336,34 @@ h2 {
   color: #111;
 }
 
+.teleprompter-countdown {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--sans);
+  font-size: clamp(5rem, 22vw, 12rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 19;
+  transition:
+    opacity 140ms ease,
+    visibility 0s linear 140ms;
+}
+
+.teleprompter-countdown.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 140ms ease,
+    visibility 0s linear 0s;
+}
+
 .teleprompter-speed {
   position: relative;
   width: 0.8rem;
@@ -762,7 +790,7 @@ body.teleprompter-active.teleprompter-manual-scroll
 .song-scroll-region {
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 0 0 1rem;
+  padding: 0 0 calc(1rem + var(--teleprompter-end-padding, 0px));
   position: relative;
 }
 

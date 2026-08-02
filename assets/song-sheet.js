@@ -523,7 +523,9 @@
     var speedStorageKey =
       "song-sheet:teleprompter-speed:" + window.location.pathname;
     var isPlaying = false;
+    var isCountingDown = false;
     var timerId = 0;
+    var countdownTimerId = 0;
     var speedInput = speedControl.querySelector(".teleprompter-speed__input");
     var defaultSpeed = 0.4;
     var minSpeed = 0;
@@ -531,6 +533,24 @@
     var speed = defaultSpeed;
     var wakeLock = null;
     var scrollPosition = 0;
+    var countdownOverlay = document.createElement("div");
+    countdownOverlay.className = "teleprompter-countdown";
+    countdownOverlay.setAttribute("aria-hidden", "true");
+    countdownOverlay.hidden = true;
+    countdownOverlay.style.position = "fixed";
+    countdownOverlay.style.inset = "0";
+    countdownOverlay.style.display = "none";
+    countdownOverlay.style.alignItems = "center";
+    countdownOverlay.style.justifyContent = "center";
+    countdownOverlay.style.fontFamily = "var(--sans)";
+    countdownOverlay.style.fontSize = "clamp(5rem, 22vw, 12rem)";
+    countdownOverlay.style.fontWeight = "700";
+    countdownOverlay.style.lineHeight = "1";
+    countdownOverlay.style.color = "color-mix(in srgb, var(--ink) 72%, white)";
+    countdownOverlay.style.background = "rgba(253, 250, 245, 0.46)";
+    countdownOverlay.style.zIndex = "999";
+    countdownOverlay.style.pointerEvents = "none";
+    document.body.appendChild(countdownOverlay);
 
     function pulseButton(button) {
       button.classList.remove("is-pulsing");
@@ -657,37 +677,63 @@
       );
     }
 
+    function syncTeleprompterEndPadding() {
+      var scroller = host._scrollRegion;
+      if (!scroller) return;
+      var extraPadding = Math.max(96, Math.round(scroller.clientHeight * 0.42));
+      document.body.style.setProperty(
+        "--teleprompter-end-padding",
+        extraPadding + "px",
+      );
+    }
+
+    function renderCountdown(value) {
+      countdownOverlay.textContent = value > 0 ? String(value) : "";
+      countdownOverlay.hidden = value <= 0;
+      countdownOverlay.style.display = value > 0 ? "flex" : "none";
+      countdownOverlay.classList.toggle("is-visible", value > 0);
+    }
+
     function render() {
-      toggle.innerHTML = isPlaying ? pauseIcon : playIcon;
-      toggle.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+      var isActive = isPlaying || isCountingDown;
+      toggle.innerHTML = isActive ? pauseIcon : playIcon;
+      toggle.setAttribute("aria-pressed", isActive ? "true" : "false");
       toggle.setAttribute(
         "aria-label",
-        isPlaying ? "Pausar teleprompter" : "Activar teleprompter",
+        isActive ? "Pausar teleprompter" : "Activar teleprompter",
       );
-      toggle.title = isPlaying ? "Pausar teleprompter" : "Activar teleprompter";
+      toggle.title = isActive ? "Pausar teleprompter" : "Activar teleprompter";
       speedInput.value = String(speed);
       syncZeroState();
-      speedControl.hidden = !isPlaying;
-      if (isPlaying) {
+      speedControl.hidden = !isActive;
+      if (isActive) {
         syncFloatingPosition();
         syncTeleprompterOverlayOffset();
+        syncTeleprompterEndPadding();
       } else {
         document.body.style.removeProperty("--teleprompter-overlay-offset");
+        document.body.style.removeProperty("--teleprompter-end-padding");
       }
-      document.body.classList.toggle("teleprompter-active", isPlaying);
+      document.body.classList.toggle("teleprompter-active", isActive);
       if (host._updateScrollRegionHeight) host._updateScrollRegionHeight();
-      writeStoredState(isPlaying);
+      writeStoredState(isActive);
       pulseButton(toggle);
     }
 
-    function stop() {
+    function stop(silent) {
       isPlaying = false;
+      isCountingDown = false;
       if (timerId) {
         window.clearInterval(timerId);
         timerId = 0;
       }
+      if (countdownTimerId) {
+        window.clearTimeout(countdownTimerId);
+        countdownTimerId = 0;
+      }
+      renderCountdown(0);
       releaseWakeLock();
-      render();
+      if (!silent) render();
     }
 
     function step() {
@@ -710,9 +756,10 @@
       scroller.scrollTop = scrollPosition;
     }
 
-    function start() {
+    function beginPlayback() {
       if (isPlaying) return;
       isPlaying = true;
+      isCountingDown = false;
       syncScrollPosition();
       render();
       requestWakeLock();
@@ -720,12 +767,39 @@
       timerId = window.setInterval(step, 16);
     }
 
-    toggle.addEventListener("click", function () {
-      if (isPlaying) {
+    function start() {
+      if (isPlaying || isCountingDown) return;
+      isCountingDown = true;
+      renderCountdown(3);
+      render();
+
+      var remaining = 3;
+      function tick() {
+        if (!isCountingDown) return;
+        remaining -= 1;
+        if (remaining <= 0) {
+          countdownTimerId = 0;
+          renderCountdown(0);
+          beginPlayback();
+          return;
+        }
+        renderCountdown(remaining);
+        countdownTimerId = window.setTimeout(tick, 1000);
+      }
+
+      countdownTimerId = window.setTimeout(tick, 1000);
+    }
+
+    function togglePlayback() {
+      if (isPlaying || isCountingDown) {
         stop();
       } else {
         start();
       }
+    }
+
+    toggle.addEventListener("click", function () {
+      togglePlayback();
     });
 
     speedInput.addEventListener("input", function () {
@@ -746,8 +820,23 @@
       if (document.hidden && isPlaying) stop();
     });
 
+    document.addEventListener("keydown", function (event) {
+      var target = event.target;
+      if (event.key !== " ") return;
+      if (
+        target &&
+        (target.isContentEditable ||
+          /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(target.tagName))
+      ) {
+        return;
+      }
+      event.preventDefault();
+      togglePlayback();
+    });
+
     window.addEventListener("beforeunload", function () {
       if (timerId) window.clearInterval(timerId);
+      if (countdownTimerId) window.clearTimeout(countdownTimerId);
       releaseWakeLock();
     });
 
@@ -942,6 +1031,12 @@
       var top = wrapper.getBoundingClientRect().top;
       var height = Math.max(180, viewportHeight - top - 16);
       wrapper.style.height = height + "px";
+      if (document.body.classList.contains("teleprompter-active")) {
+        document.body.style.setProperty(
+          "--teleprompter-end-padding",
+          Math.max(96, Math.round(height * 0.42)) + "px",
+        );
+      }
     }
 
     this._updateScrollRegionHeight = updateHeight;
