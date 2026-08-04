@@ -1,92 +1,143 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Por seguir · Letras</title>
-  <meta name="theme-color" content="#fdfaf5">
-  <meta name="apple-mobile-web-app-title" content="Cancionero">
-  <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-  <link rel="manifest" href="../manifest.webmanifest">
-  <link rel="stylesheet" href="../assets/site.css">
-  <script src="../assets/vendor/svguitar.umd.js" defer></script>
-  <script src="../assets/chords-db.js" defer></script>
-  <script src="../assets/chord-modal.js" defer></script>
-  <script src="../assets/song-sheet.js" defer></script>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Por seguir · Letras</title>
+    <meta name="theme-color" content="#fdfaf5" />
+    <meta name="apple-mobile-web-app-title" content="Cancionero" />
+    <link rel="icon" href="../assets/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script src="../assets/vendor/svguitar.umd.js" defer></script>
+    <script src="../assets/chords-db.js" defer></script>
+    <script src="../assets/chord-modal.js" defer></script>
+    <script src="../assets/song-sheet.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../index.html" title="Volver al índice">
+        <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+          <rect class="frame" x="8" y="8" width="32" height="32" rx="3" />
+          <line class="string" x1="18" y1="8" x2="18" y2="40" />
+          <line class="string" x1="24" y1="8" x2="24" y2="40" />
+          <line class="string" x1="30" y1="8" x2="30" y2="40" />
+          <line class="string" x1="8" y1="20" x2="40" y2="20" />
+          <line class="string" x1="8" y1="30" x2="40" y2="30" />
+          <circle class="dot" cx="18" cy="25" r="3.2" />
+          <circle class="dot" cx="30" cy="15" r="3.2" />
+        </svg>
+        <span class="wordmark">Letras<small>cancionero</small></span>
+      </a>
+    </header>
 
-<header class="site-header">
-  <a class="brand" href="../index.html" title="Volver al índice">
-    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
-      <rect class="frame" x="8" y="8" width="32" height="32" rx="3"/>
-      <line class="string" x1="18" y1="8" x2="18" y2="40"/>
-      <line class="string" x1="24" y1="8" x2="24" y2="40"/>
-      <line class="string" x1="30" y1="8" x2="30" y2="40"/>
-      <line class="string" x1="8" y1="20" x2="40" y2="20"/>
-      <line class="string" x1="8" y1="30" x2="40" y2="30"/>
-      <circle class="dot" cx="18" cy="25" r="3.2"/>
-      <circle class="dot" cx="30" cy="15" r="3.2"/>
-    </svg>
-    <span class="wordmark">Letras<small>cancionero</small></span>
-  </a>
-</header>
+    <h1>Por seguir</h1>
+    <p class="lead">Raúl Carnota</p>
 
-<h1>Por seguir</h1>
-<p class="lead">Raúl Carnota</p>
-
-<!-- Letra provista por el usuario y estructura de acordes tomada como
+    <!-- Letra provista por el usuario y estructura de acordes tomada como
      referencia de Cifra Club / raul-carnota/por-seguir.
      Acordes usados: Gm, Eb, F, F7, Bb, Bb7, G7, Cm, D7. -->
-<song-sheet data-key="Sol menor">
-<div class="letra">
-  <p class="estrofa">
-    <span class="seccion">Estrofa 1</span>
-    <span class="sobre"><span class="c">Gm</span>Yo</span> me sueño a ratos<br>
-    volteando quimeras<br>
-    <span class="sobre"><span class="c">Eb</span>Ay</span> ser que estoy viejo<br>
-    <span class="sobre"><span class="c">F</span>Cansa</span><span class="sobre"><span class="c">F7</span>do</span> de ausencias<br>
-    <span class="sobre"><span class="c">Bb</span>Tras</span> <span class="sobre"><span class="c">Bb7</span>mis</span> desvaríos<br>
-    <span class="sobre"><span class="c">G7</span>Me</span> estallan las penas<br>
-    <span class="sobre"><span class="c">Cm</span>El</span> amor sirve para ab<span class="sobre"><span class="c">F</span>rir</span><br>
-    las puertas <span class="sobre"><span class="c">F7</span>del</span> destino<span class="sobre"><span class="c">Bb</span></span><br>
-    un beso p<span class="sobre"><span class="c">D7</span>uede</span> más que el sol<span class="sobre"><span class="c">Eb</span></span><br>
-    abriendo cami<span class="sobre"><span class="c">Cm</span>nos</span><br>
-    la vi<span class="sobre"><span class="c">D7</span>da</span> me ron<span class="sobre"><span class="c">Gm</span>da</span><br>
-    no to<span class="sobre"><span class="c">G7</span>do</span> es tristez<span class="sobre"><span class="c">Cm</span>a</span><br>
-    si en unos ojos me he de v<span class="sobre"><span class="c">F</span>er</span><br>
-    velay que <span class="sobre"><span class="c">F7</span>sean</span> los tuy<span class="sobre"><span class="c">Bb</span>os</span><br>
-    la vida rue<span class="sobre"><span class="c">D7</span>da</span> y hay que an<span class="sobre"><span class="c">Eb</span>dar</span><br>
-    juntando capul<span class="sobre"><span class="c">Cm</span>los</span><br>
-    mi jardín se sec<span class="sobre"><span class="c">Eb</span>a</span><br>
-    vos sos <span class="sobre"><span class="c">D7</span>agua</span> que sue<span class="sobre"><span class="c">Gm</span>na</span>
-  </p>
-  <p class="estrofa">
-    <span class="seccion">Estrofa 2</span>
-    <span class="sobre"><span class="c">Gm</span>Tengo</span> tantos gritos<br>
-    adentro de mi alma<br>
-    <span class="sobre"><span class="c">Eb</span>Voy</span> golpeando estrellas<br>
-    <span class="sobre"><span class="c">F</span>Mis</span> noches son <span class="sobre"><span class="c">F7</span>largas</span><br>
-    <span class="sobre"><span class="c">Bb</span>Y</span> tenso a la luna<span class="sobre"><span class="c">Bb7</span></span><br>
-    <span class="sobre"><span class="c">G7</span>Mi</span> bombo en su fragua<br>
-    <span class="sobre"><span class="c">Cm</span>Si</span> no encontramos la r<span class="sobre"><span class="c">F</span>azón</span><br>
-    quizás ll<span class="sobre"><span class="c">F7</span>egó</span> el momento<span class="sobre"><span class="c">Bb</span></span><br>
-    es un ins<span class="sobre"><span class="c">D7</span>tante</span> nada más<span class="sobre"><span class="c">Eb</span></span><br>
-    y luego el silenc<span class="sobre"><span class="c">Cm</span>io</span><br>
-    deja <span class="sobre"><span class="c">D7</span>las</span> palabra<span class="sobre"><span class="c">Gm</span>s</span><br>
-    el vi<span class="sobre"><span class="c">G7</span>ento</span> las bar<span class="sobre"><span class="c">Cm</span>re</span><br>
-    no pienses nunca que me f<span class="sobre"><span class="c">F</span>ui</span><br>
-    yo solo s<span class="sobre"><span class="c">F7</span>oy</span> cami<span class="sobre"><span class="c">Bb</span>no</span><br>
-    voy más <span class="sobre"><span class="c">D7</span>allá</span> de esta pasi<span class="sobre"><span class="c">Eb</span>ón</span><br>
-    herida de ol<span class="sobre"><span class="c">Cm</span>vido</span><br>
-    mi jardín se sec<span class="sobre"><span class="c">Eb</span>a</span><br>
-    vos sos <span class="sobre"><span class="c">D7</span>agua</span> que sue<span class="sobre"><span class="c">Gm</span>na</span>
-  </p>
-</div>
-</song-sheet>
+    <song-sheet data-key="Sol menor">
+      <div class="letra">
+        <p class="estrofa">
+          <span class="seccion">Estrofa 1</span>
+          <span class="sobre"><span class="c">Gm</span>Yo</span> me sueño a
+          ratos<br />
+          volteando quimeras<br />
+          <span class="sobre"><span class="c">Eb</span>Ay</span> ser que estoy
+          viejo<br />
+          <span class="sobre"><span class="c">F</span>Cansa</span
+          ><span class="sobre"><span class="c">F7</span>do</span> de
+          ausencias<br />
+          <span class="sobre"><span class="c">Bb</span>Tras</span>
+          <span class="sobre"><span class="c">Bb7</span>mis</span>
+          desvaríos<br />
+          <span class="sobre"><span class="c">G7</span>Me</span> estallan las
+          penas<br />
+          <span class="sobre"><span class="c">Cm</span>El</span> amor sirve para
+          ab<span class="sobre"><span class="c">F</span>rir</span><br />
+          las puertas
+          <span class="sobre"><span class="c">F7</span>del</span> des<span
+            class="sobre"
+            >tino<span class="c">Bb</span></span
+          ><br />
+          un beso p<span class="sobre"><span class="c">D7</span>uede</span> más
+          que el <span class="sobre">sol<span class="c">Eb</span></span
+          ><br />
+          abriendo cami<span class="sobre"><span class="c">Cm</span>nos</span
+          ><br />
+          la vi<span class="sobre"><span class="c">D7</span>da</span> me
+          ron<span class="sobre"><span class="c">Gm</span>da</span><br />
+          no to<span class="sobre"><span class="c">G7</span>do</span> es
+          tristez<span class="sobre"><span class="c">Cm</span>a</span><br />
+          si en unos ojos me he de v<span class="sobre"
+            ><span class="c">F</span>er</span
+          ><br />
+          velay que <span class="sobre"><span class="c">F7</span>sean</span> los
+          tuy<span class="sobre"><span class="c">Bb</span>os</span><br />
+          la vida rue<span class="sobre"><span class="c">D7</span>da</span> y
+          hay que an<span class="sobre"><span class="c">Eb</span>dar</span
+          ><br />
+          juntando capul<span class="sobre"><span class="c">Cm</span>los</span
+          ><br />
+          mi jardín se sec<span class="sobre"><span class="c">Eb</span>a</span
+          ><br />
+          vos sos <span class="sobre"><span class="c">D7</span>agua</span> que
+          sue<span class="sobre"><span class="c">Gm</span>na</span>
+        </p>
+        <p class="estrofa">
+          <span class="seccion">Estrofa 2</span>
+          <span class="sobre"><span class="c">Gm</span>Tengo</span> tantos
+          gritos<br />
+          adentro de mi alma<br />
+          <span class="sobre"><span class="c">Eb</span>Voy</span> golpeando
+          estrellas<br />
+          <span class="sobre"><span class="c">F</span>Mis</span> noches son
+          <span class="sobre"><span class="c">F7</span>largas</span><br />
+          <span class="sobre"><span class="c">Bb</span>Y</span> tenso a la
+          <span class="sobre">luna<span class="c">Bb7</span></span
+          ><br />
+          <span class="sobre"><span class="c">G7</span>Mi</span> bombo en su
+          fragua<br />
+          <span class="sobre"><span class="c">Cm</span>Si</span> no encontramos
+          la r<span class="sobre"><span class="c">F</span>azón</span><br />
+          quizás ll<span class="sobre"><span class="c">F7</span>egó</span> el
+          momento<span class="sobre"> <span class="c">Bb</span></span
+          ><br />
+          es un ins<span class="sobre"><span class="c">D7</span>tante</span>
+          nada más<span class="sobre"> <span class="c">Eb</span></span
+          ><br />
+          y luego el silenc<span class="sobre"><span class="c">Cm</span>io</span
+          ><br />
+          deja
+          <span class="sobre"><span class="c">D7</span>las</span> palabra<span
+            class="sobre"
+            ><span class="c">Gm</span>s</span
+          ><br />
+          el vi<span class="sobre"><span class="c">G7</span>ento</span> las
+          bar<span class="sobre"><span class="c">Cm</span>re</span><br />
+          no pienses nunca que me f<span class="sobre"
+            ><span class="c">F</span>ui</span
+          ><br />
+          yo solo s<span class="sobre"><span class="c">F7</span>oy</span>
+          cami<span class="sobre"><span class="c">Bb</span>no</span><br />
+          voy más <span class="sobre"><span class="c">D7</span>allá</span> de
+          esta pasi<span class="sobre"><span class="c">Eb</span>ón</span><br />
+          herida de ol<span class="sobre"><span class="c">Cm</span>vido</span
+          ><br />
+          mi jardín se sec<span class="sobre"><span class="c">Eb</span>a</span
+          ><br />
+          vos sos <span class="sobre"><span class="c">D7</span>agua</span> que
+          sue<span class="sobre"><span class="c">Gm</span>na</span>
+        </p>
+      </div>
+    </song-sheet>
 
-<p class="source-link"><a href="https://www.cifraclub.com/raul-carnota/por-seguir/">Ver fuente</a></p>
-
-</body>
+    <p class="source-link">
+      <a href="https://www.cifraclub.com/raul-carnota/por-seguir/"
+        >Ver fuente</a
+      >
+    </p>
+  </body>
 </html>
